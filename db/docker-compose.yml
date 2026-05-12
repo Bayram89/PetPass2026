@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: petpass-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: petpass
+      POSTGRES_USER: petpass
+      POSTGRES_PASSWORD: petpass
+    ports:
+      - "5433:5432"
+    volumes:
+      - petpass_postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  petpass_postgres_data:

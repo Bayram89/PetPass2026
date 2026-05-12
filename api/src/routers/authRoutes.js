@@ -30,6 +30,43 @@ router.get("/api/me", (req, res) => {
   res.json({ user: req.user || null });
 });
 
+router.get("/auth/dev-login", async (req, res, next) => {
+  if (process.env.NODE_ENV === "production") {
+    return res.status(404).json({ error: "not found" });
+  }
+
+  try {
+    const email = String(req.query.email || "").trim();
+    if (!email) {
+      return res.status(400).json({ error: "email is required" });
+    }
+
+    const user = await db.getUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ error: "user not found" });
+    }
+
+    const sessionUser = {
+      id: user.id,
+      email: user.email,
+      full_name: user.full_name,
+      googleid: user.googleid ?? user.google_id ?? null,
+      photo: user.photo ?? "",
+      role: user.admin ? "admin" : "user",
+    };
+
+    req.login(sessionUser, (err) => {
+      if (err) return next(err);
+      return req.session.save((saveErr) => {
+        if (saveErr) return next(saveErr);
+        return res.json({ user: sessionUser });
+      });
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.post("/auth/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
