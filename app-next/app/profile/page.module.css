@@ -220,6 +220,25 @@
   opacity: 0.5;
 }
 
+.profile__actionGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.profile__deleteButton {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(168, 61, 42, 0.28);
+  border-radius: 999px;
+  background: rgba(168, 61, 42, 0.08);
+  color: #a83d2a;
+  font-weight: 800;
+}
+
+.profile__deleteButton:disabled {
+  opacity: 0.5;
+}
+
 .profile__lockedText {
   color: var(--text-soft);
   font-size: 0.9rem;

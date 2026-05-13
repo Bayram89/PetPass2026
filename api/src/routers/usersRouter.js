@@ -77,12 +77,22 @@ usersRouter.put("/api/users/:email",requireAuth, async (request, response) => {
   response.status(201).send({ message: "user updated successfully." });
 });
 
-usersRouter.delete("/api/users/:id",requireAuth, async (request, response) => {
+usersRouter.delete("/api/users/:id", requireAuth, requireRole("admin"), async (request, response) => {
   const id = Number(request.params.id);
 
-  if (!id) return response.status(400).send({ error: `Id is mandatory` });
+  if (!id) return response.status(400).send({ error: "Id is mandatory" });
 
-  const isDeleted = await db.deleteUserByGoogleId(id);
+  const sessionUser = request.user || request.session?.user;
+  if (sessionUser?.id && Number(sessionUser.id) === id) {
+    return response.status(400).send({ error: "You cannot delete your current account." });
+  }
+
+  const existingUsers = await db.getUserById(id);
+  const existingUser = Array.isArray(existingUsers) ? existingUsers[0] : existingUsers;
+
+  if (!existingUser) return response.status(404).send({ error: "user not found." });
+
+  const isDeleted = await db.deleteUserById(id);
 
   if (isDeleted) return response.send({ message: "user data deleted successfully." });
 

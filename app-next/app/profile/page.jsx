@@ -21,6 +21,7 @@ export default function ProfilePage() {
   const { users, isLoading: usersLoading, error: usersError, refresh: refreshUsers } = useFetchAllUsers(isAdmin);
   const safePets = Array.isArray(pets) ? pets : [];
   const [roleUpdateId, setRoleUpdateId] = useState(null);
+  const [deleteUserId, setDeleteUserId] = useState(null);
   const [roleError, setRoleError] = useState("");
   const [createError, setCreateError] = useState("");
   const [createSuccess, setCreateSuccess] = useState("");
@@ -147,6 +148,8 @@ export default function ProfilePage() {
 
   async function handleRoleToggle(listedUser) {
     setRoleError("");
+    setCreateError("");
+    setCreateSuccess("");
     setRoleUpdateId(listedUser.id);
 
     try {
@@ -159,6 +162,27 @@ export default function ProfilePage() {
       setRoleError(error.message || "Could not update the user role.");
     } finally {
       setRoleUpdateId(null);
+    }
+  }
+
+  async function handleDeleteUser(listedUser) {
+    const confirmed = window.confirm(`Delete ${listedUser.full_name || listedUser.email}? This will also remove pets owned by this user.`);
+    if (!confirmed) return;
+
+    setRoleError("");
+    setCreateError("");
+    setCreateSuccess("");
+    setDeleteUserId(listedUser.id);
+
+    try {
+      await api(`/api/users/${listedUser.id}`, {
+        method: "DELETE",
+      });
+      await refreshUsers();
+    } catch (error) {
+      setRoleError(error.message || "Could not delete the user.");
+    } finally {
+      setDeleteUserId(null);
     }
   }
 
@@ -353,7 +377,9 @@ export default function ProfilePage() {
                     <tbody>
                       {users.map((listedUser) => {
                         const isCurrentUser = String(listedUser.id) === String(authUser?.id);
-                        const isUpdating = roleUpdateId === listedUser.id;
+                        const isUpdatingRole = roleUpdateId === listedUser.id;
+                        const isDeletingUser = deleteUserId === listedUser.id;
+                        const isBusy = isUpdatingRole || isDeletingUser;
 
                         return (
                           <tr key={listedUser.id}>
@@ -372,14 +398,24 @@ export default function ProfilePage() {
                               {isCurrentUser ? (
                                 <span className={styles.profile__lockedText}>Current account</span>
                               ) : (
-                                <button
-                                  type="button"
-                                  className={styles.profile__roleButton}
-                                  onClick={() => handleRoleToggle(listedUser)}
-                                  disabled={isUpdating}
-                                >
-                                  {isUpdating ? "Saving..." : listedUser.admin ? "Make user" : "Make admin"}
-                                </button>
+                                <div className={styles.profile__actionGroup}>
+                                  <button
+                                    type="button"
+                                    className={styles.profile__roleButton}
+                                    onClick={() => handleRoleToggle(listedUser)}
+                                    disabled={isBusy}
+                                  >
+                                    {isUpdatingRole ? "Saving..." : listedUser.admin ? "Make user" : "Make admin"}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={styles.profile__deleteButton}
+                                    onClick={() => handleDeleteUser(listedUser)}
+                                    disabled={isBusy}
+                                  >
+                                    {isDeletingUser ? "Deleting..." : "Delete"}
+                                  </button>
+                                </div>
                               )}
                             </td>
                           </tr>

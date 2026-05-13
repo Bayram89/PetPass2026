@@ -8,6 +8,13 @@ export async function deleteUserByGoogleId(id) {
   return dbClient("users").where("google_id", id).del();
 }
 
+export async function deleteUserById(id) {
+  return dbClient.transaction(async (trx) => {
+    await trx("pets").where("owner_user_id", id).del();
+    return trx("users").where("id", id).del();
+  });
+}
+
 export async function getUserById(id) {
   return dbClient("users").select("*").where("id", id);
 }
