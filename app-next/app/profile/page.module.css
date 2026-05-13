@@ -9,6 +9,7 @@
 
 .profile__hero,
 .profile__petsPanel,
+.profile__adminPanel,
 .profile__empty {
   padding: 28px;
 }
@@ -113,6 +114,72 @@
 .profile__petsHeader h2 {
   margin-bottom: 8px;
   font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.profile__adminHeader h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+}
+
+.profile__tableScroller {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  margin-top: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.profile__table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.profile__title {
+  padding: 16px 18px;
+  background: #fff9f3;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.profile__cell {
+  padding: 15px 18px;
+  border-bottom: 1px solid rgba(42, 59, 53, 0.08);
+  white-space: nowrap;
+}
+
+.profile__nameCell {
+  font-weight: 800;
+}
+
+.profile__roleBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.profile__roleBadgeAdmin {
+  background: rgba(216, 108, 74, 0.14);
+  color: var(--accent-deep);
+}
+
+.profile__roleBadgeUser {
+  background: rgba(42, 59, 53, 0.08);
+  color: var(--text-soft);
+}
+
+.profile__adminState {
+  margin-top: 20px;
+  color: var(--text-soft);
 }
 
 .profile__loading {
@@ -292,6 +359,7 @@
 @media (max-width: 900px) {
   .profile__hero,
   .profile__petsPanel,
+  .profile__adminPanel,
   .profile__empty {
     padding: 22px 18px;
   }

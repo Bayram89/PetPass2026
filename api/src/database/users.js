@@ -28,3 +28,9 @@ export async function getUserByEmail(email) {
   const [user] = await dbClient("users").select("*").where("email", email);
   return user;
 }
+
+export async function getAllUsers() {
+  return dbClient("users")
+    .select("id", "full_name", "email", "phone", "address", "admin", "created_at", "updated_at")
+    .orderBy("full_name", "asc");
+}

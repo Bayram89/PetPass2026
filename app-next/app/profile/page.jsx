@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import FetchUserData from "./components/DBFunctions/FetchUserData";
+import useFetchAllUsers from "./components/DBFunctions/FetchAllUsers";
 import useFetchUserPetData from "./components/DBFunctions/FetchUserPetData";
 import styles from "./page.module.css";
 
@@ -15,6 +16,8 @@ export default function ProfilePage() {
   const { user: authUser, loading } = useAuth();
   const { user, isLoading: userLoading, error: userError } = FetchUserData(authUser?.email);
   const { pets, isLoading: petsLoading } = useFetchUserPetData(user?.id);
+  const isAdmin = authUser?.role === "admin";
+  const { users, isLoading: usersLoading, error: usersError } = useFetchAllUsers(isAdmin);
   const safePets = Array.isArray(pets) ? pets : [];
 
   const userPicture = authUser?.photo ?? "/images/loading.svg";
@@ -231,6 +234,55 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
+
+        {isAdmin ? (
+          <div className={`pageCard ${styles.profile__adminPanel}`}>
+            <div className={styles.profile__adminHeader}>
+              <div>
+                <span className="eyebrow">Admin</span>
+                <h2>All users</h2>
+                <p>Start here before we add role editing. This shows the current users in your local system.</p>
+              </div>
+            </div>
+
+            {usersLoading ? (
+              <p className={styles.profile__loading}>Loading users...</p>
+            ) : usersError ? (
+              <p className={styles.profile__adminState}>Could not load users right now.</p>
+            ) : (
+              <div className={styles.profile__tableScroller}>
+                <table className={styles.profile__table}>
+                  <thead>
+                    <tr>
+                      <th className={styles.profile__title}>Name</th>
+                      <th className={styles.profile__title}>Email</th>
+                      <th className={styles.profile__title}>Phone</th>
+                      <th className={styles.profile__title}>Address</th>
+                      <th className={styles.profile__title}>Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((listedUser) => (
+                      <tr key={listedUser.id}>
+                        <td className={styles.profile__cell}>
+                          <span className={styles.profile__nameCell}>{listedUser.full_name || "Unknown user"}</span>
+                        </td>
+                        <td className={styles.profile__cell}>{listedUser.email || "Missing"}</td>
+                        <td className={styles.profile__cell}>{listedUser.phone || "Missing"}</td>
+                        <td className={styles.profile__cell}>{listedUser.address || "Missing"}</td>
+                        <td className={styles.profile__cell}>
+                          <span className={`${styles.profile__roleBadge} ${listedUser.admin ? styles.profile__roleBadgeAdmin : styles.profile__roleBadgeUser}`}>
+                            {listedUser.admin ? "Admin" : "User"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        ) : null}
       </div>
     </section>
   );

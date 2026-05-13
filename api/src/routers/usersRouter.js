@@ -1,6 +1,6 @@
 import express from "express";
 import * as db from "../database/users.js";
-import { requireAuth } from '../middlewares/auth.js';
+import { requireAuth, requireRole } from "../middlewares/auth.js";
 const usersRouter = express.Router();
 
 usersRouter.post("/api/users", async (request, response) => {
@@ -12,6 +12,11 @@ usersRouter.post("/api/users", async (request, response) => {
   await db.addUser(createUserObject(user));
 
   response.status(201).json({ message: "user added successfully." });
+});
+
+usersRouter.get("/api/users", requireAuth, requireRole("admin"), async (_request, response) => {
+  const users = await db.getAllUsers();
+  response.send(users);
 });
 
 usersRouter.get("/api/users/:email",requireAuth, async (request, response) => {
