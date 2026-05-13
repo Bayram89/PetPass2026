@@ -6,6 +6,7 @@ import { Settings2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
+import api from "@/lib/api";
 import FetchUserData from "./components/DBFunctions/FetchUserData";
 import useFetchAllUsers from "./components/DBFunctions/FetchAllUsers";
 import useFetchUserPetData from "./components/DBFunctions/FetchUserPetData";
@@ -17,8 +18,21 @@ export default function ProfilePage() {
   const { user, isLoading: userLoading, error: userError } = FetchUserData(authUser?.email);
   const { pets, isLoading: petsLoading } = useFetchUserPetData(user?.id);
   const isAdmin = authUser?.role === "admin";
-  const { users, isLoading: usersLoading, error: usersError } = useFetchAllUsers(isAdmin);
+  const { users, isLoading: usersLoading, error: usersError, refresh: refreshUsers } = useFetchAllUsers(isAdmin);
   const safePets = Array.isArray(pets) ? pets : [];
+  const [roleUpdateId, setRoleUpdateId] = useState(null);
+  const [roleError, setRoleError] = useState("");
+  const [createError, setCreateError] = useState("");
+  const [createSuccess, setCreateSuccess] = useState("");
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [newUserForm, setNewUserForm] = useState({
+    full_name: "",
+    email: "",
+    phone: "",
+    address: "",
+    date_of_birth: "1995-01-01",
+    passport_number: "",
+  });
 
   const userPicture = authUser?.photo ?? "/images/loading.svg";
   const count = safePets.length + 1;
@@ -131,6 +145,61 @@ export default function ProfilePage() {
     router.push("/profile/pets/new");
   }
 
+  async function handleRoleToggle(listedUser) {
+    setRoleError("");
+    setRoleUpdateId(listedUser.id);
+
+    try {
+      await api(`/api/users/${listedUser.id}/role`, {
+        method: "PATCH",
+        body: JSON.stringify({ admin: !listedUser.admin }),
+      });
+      await refreshUsers();
+    } catch (error) {
+      setRoleError(error.message || "Could not update the user role.");
+    } finally {
+      setRoleUpdateId(null);
+    }
+  }
+
+  function handleNewUserChange(event) {
+    const { name, value } = event.target;
+    setNewUserForm((current) => ({ ...current, [name]: value }));
+  }
+
+  async function handleCreateUser(event) {
+    event.preventDefault();
+    setCreateError("");
+    setCreateSuccess("");
+    setIsCreatingUser(true);
+
+    try {
+      const now = new Date().toISOString();
+      await api("/api/users", {
+        method: "POST",
+        body: JSON.stringify({
+          ...newUserForm,
+          created_at: now,
+          updated_at: now,
+        }),
+      });
+      setCreateSuccess("New local user created.");
+      setNewUserForm({
+        full_name: "",
+        email: "",
+        phone: "",
+        address: "",
+        date_of_birth: "1995-01-01",
+        passport_number: "",
+      });
+      await refreshUsers();
+    } catch (error) {
+      setCreateError(error.message || "Could not create the user.");
+    } finally {
+      setIsCreatingUser(false);
+    }
+  }
+
   const profileStats = [
     { label: "Pets on file", value: safePets.length },
     { label: "Profile status", value: user?.passport_number ? "Ready" : "Needs details" },
@@ -241,7 +310,7 @@ export default function ProfilePage() {
               <div>
                 <span className="eyebrow">Admin</span>
                 <h2>All users</h2>
-                <p>Start here before we add role editing. This shows the current users in your local system.</p>
+                <p>Manage the local users in your system and switch their access level when needed.</p>
               </div>
             </div>
 
@@ -250,36 +319,76 @@ export default function ProfilePage() {
             ) : usersError ? (
               <p className={styles.profile__adminState}>Could not load users right now.</p>
             ) : (
-              <div className={styles.profile__tableScroller}>
-                <table className={styles.profile__table}>
-                  <thead>
-                    <tr>
-                      <th className={styles.profile__title}>Name</th>
-                      <th className={styles.profile__title}>Email</th>
-                      <th className={styles.profile__title}>Phone</th>
-                      <th className={styles.profile__title}>Address</th>
-                      <th className={styles.profile__title}>Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((listedUser) => (
-                      <tr key={listedUser.id}>
-                        <td className={styles.profile__cell}>
-                          <span className={styles.profile__nameCell}>{listedUser.full_name || "Unknown user"}</span>
-                        </td>
-                        <td className={styles.profile__cell}>{listedUser.email || "Missing"}</td>
-                        <td className={styles.profile__cell}>{listedUser.phone || "Missing"}</td>
-                        <td className={styles.profile__cell}>{listedUser.address || "Missing"}</td>
-                        <td className={styles.profile__cell}>
-                          <span className={`${styles.profile__roleBadge} ${listedUser.admin ? styles.profile__roleBadgeAdmin : styles.profile__roleBadgeUser}`}>
-                            {listedUser.admin ? "Admin" : "User"}
-                          </span>
-                        </td>
+              <>
+                <form className={styles.profile__createUserForm} onSubmit={handleCreateUser}>
+                  <div className={styles.profile__createUserGrid}>
+                    <input className={styles.profile__input} name="full_name" placeholder="Full name" value={newUserForm.full_name} onChange={handleNewUserChange} required />
+                    <input className={styles.profile__input} name="email" type="email" placeholder="Email" value={newUserForm.email} onChange={handleNewUserChange} required />
+                    <input className={styles.profile__input} name="phone" placeholder="Phone" value={newUserForm.phone} onChange={handleNewUserChange} required />
+                    <input className={styles.profile__input} name="address" placeholder="Address" value={newUserForm.address} onChange={handleNewUserChange} required />
+                    <input className={styles.profile__input} name="date_of_birth" type="date" value={newUserForm.date_of_birth} onChange={handleNewUserChange} required />
+                    <input className={styles.profile__input} name="passport_number" placeholder="Passport number" value={newUserForm.passport_number} onChange={handleNewUserChange} required />
+                  </div>
+                  <button type="submit" className={styles.profile__createUserButton} disabled={isCreatingUser}>
+                    {isCreatingUser ? "Creating..." : "Create local user"}
+                  </button>
+                </form>
+
+                {createError ? <p className={styles.profile__adminError}>{createError}</p> : null}
+                {createSuccess ? <p className={styles.profile__adminSuccess}>{createSuccess}</p> : null}
+                {roleError ? <p className={styles.profile__adminError}>{roleError}</p> : null}
+
+                <div className={styles.profile__tableScroller}>
+                  <table className={styles.profile__table}>
+                    <thead>
+                      <tr>
+                        <th className={styles.profile__title}>Name</th>
+                        <th className={styles.profile__title}>Email</th>
+                        <th className={styles.profile__title}>Phone</th>
+                        <th className={styles.profile__title}>Address</th>
+                        <th className={styles.profile__title}>Role</th>
+                        <th className={styles.profile__title}>Action</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {users.map((listedUser) => {
+                        const isCurrentUser = String(listedUser.id) === String(authUser?.id);
+                        const isUpdating = roleUpdateId === listedUser.id;
+
+                        return (
+                          <tr key={listedUser.id}>
+                            <td className={styles.profile__cell}>
+                              <span className={styles.profile__nameCell}>{listedUser.full_name || "Unknown user"}</span>
+                            </td>
+                            <td className={styles.profile__cell}>{listedUser.email || "Missing"}</td>
+                            <td className={styles.profile__cell}>{listedUser.phone || "Missing"}</td>
+                            <td className={styles.profile__cell}>{listedUser.address || "Missing"}</td>
+                            <td className={styles.profile__cell}>
+                              <span className={`${styles.profile__roleBadge} ${listedUser.admin ? styles.profile__roleBadgeAdmin : styles.profile__roleBadgeUser}`}>
+                                {listedUser.admin ? "Admin" : "User"}
+                              </span>
+                            </td>
+                            <td className={styles.profile__cell}>
+                              {isCurrentUser ? (
+                                <span className={styles.profile__lockedText}>Current account</span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className={styles.profile__roleButton}
+                                  onClick={() => handleRoleToggle(listedUser)}
+                                  disabled={isUpdating}
+                                >
+                                  {isUpdating ? "Saving..." : listedUser.admin ? "Make user" : "Make admin"}
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         ) : null}

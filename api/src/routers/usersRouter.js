@@ -19,6 +19,29 @@ usersRouter.get("/api/users", requireAuth, requireRole("admin"), async (_request
   response.send(users);
 });
 
+usersRouter.patch("/api/users/:id/role", requireAuth, requireRole("admin"), async (request, response) => {
+  const id = Number(request.params.id);
+  const { admin } = request.body || {};
+
+  if (!id) return response.status(400).send({ error: "Valid user id is required" });
+  if (typeof admin !== "boolean") return response.status(400).send({ error: "admin must be a boolean" });
+
+  const sessionUser = request.user || request.session?.user;
+  if (sessionUser?.id && Number(sessionUser.id) === id && admin === false) {
+    return response.status(400).send({ error: "You cannot remove admin access from your current account." });
+  }
+
+  const existingUsers = await db.getUserById(id);
+  const existingUser = Array.isArray(existingUsers) ? existingUsers[0] : existingUsers;
+
+  if (!existingUser) {
+    return response.status(404).send({ error: "user not found." });
+  }
+
+  const updatedUser = await db.updateUserRoleById(id, admin);
+  response.send(updatedUser);
+});
+
 usersRouter.get("/api/users/:email",requireAuth, async (request, response) => {
   const email = request.params.email;
   if (!email) return response.status(400).send({ error: `No email is provided` });

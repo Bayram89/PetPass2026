@@ -46,5 +46,25 @@ export default function useFetchAllUsers(enabled) {
     };
   }, [enabled]);
 
-  return { users, isLoading, error };
+  async function refresh() {
+    if (!enabled) {
+      setUsers([]);
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const data = await api("/api/users");
+      setUsers(Array.isArray(data) ? data : []);
+    } catch (fetchError) {
+      setError(fetchError);
+      setUsers([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return { users, isLoading, error, refresh, setUsers };
 }

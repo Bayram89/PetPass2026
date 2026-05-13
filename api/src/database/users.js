@@ -34,3 +34,15 @@ export async function getAllUsers() {
     .select("id", "full_name", "email", "phone", "address", "admin", "created_at", "updated_at")
     .orderBy("full_name", "asc");
 }
+
+export async function updateUserRoleById(id, isAdmin) {
+  const [user] = await dbClient("users")
+    .where("id", id)
+    .update({
+      admin: isAdmin,
+      updated_at: dbClient.fn.now(),
+    })
+    .returning(["id", "full_name", "email", "phone", "address", "admin", "created_at", "updated_at"]);
+
+  return user;
+}
