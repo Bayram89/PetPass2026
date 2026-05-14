@@ -20,6 +20,13 @@
   padding: 28px;
 }
 
+.profile__hero,
+.profile__petsHeader,
+.profile__petsPanel {
+  width: min(100%, 1040px);
+  justify-self: center;
+}
+
 .profile__heroTop {
   display: flex;
   justify-content: space-between;
@@ -551,6 +558,12 @@
 
   .profile__filterBar {
     grid-template-columns: 1fr;
+  }
+
+  .profile__hero,
+  .profile__petsHeader,
+  .profile__petsPanel {
+    width: 100%;
   }
 }
 
