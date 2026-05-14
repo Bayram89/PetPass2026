@@ -129,17 +129,18 @@
 
 .profile__createUserGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(150px, 1.05fr) minmax(170px, 1.2fr) minmax(120px, 0.85fr);
   gap: 12px;
 }
 
 .profile__input {
   min-height: 48px;
   width: 100%;
-  padding: 0 14px;
+  padding: 0 11px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.84);
+  font-size: 0.95rem;
 }
 
 .profile__createUserButton {
