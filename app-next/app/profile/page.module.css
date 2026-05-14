@@ -188,8 +188,7 @@
 .profile__cell {
   padding: 15px 18px;
   border-bottom: 1px solid rgba(42, 59, 53, 0.08);
-  white-space: normal;
-  vertical-align: top;
+  white-space: nowrap;
 }
 
 .profile__nameCell {
@@ -252,16 +251,14 @@
 
 .profile__actionGroup {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-  min-width: 0;
 }
 
 .profile__editActions {
   display: grid;
   gap: 10px;
-  min-width: min(240px, 100%);
+  min-width: 240px;
 }
 
 .profile__subtleButton {
@@ -272,12 +269,6 @@
   background: rgba(255, 255, 255, 0.68);
   color: var(--text);
   font-weight: 800;
-}
-
-.profile__subtleButton,
-.profile__roleButton,
-.profile__deleteButton {
-  flex: 0 1 auto;
 }
 
 .profile__subtleButton:disabled {
