@@ -29,6 +29,8 @@ export default function ProfilePage() {
   const [createSuccess, setCreateSuccess] = useState("");
   const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [isSavingUser, setIsSavingUser] = useState(false);
+  const [userSearch, setUserSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
   const [newUserForm, setNewUserForm] = useState({
     full_name: "",
     email: "",
@@ -282,6 +284,24 @@ export default function ProfilePage() {
     { label: "Primary contact", value: user?.phone || "Missing" },
   ];
 
+  const normalizedSearch = userSearch.trim().toLowerCase();
+  const filteredUsers = users.filter((listedUser) => {
+    const matchesRole = roleFilter === "all" || (roleFilter === "admin" ? listedUser.admin : !listedUser.admin);
+    const searchableText = [
+      listedUser.full_name,
+      listedUser.email,
+      listedUser.phone,
+      listedUser.address,
+      listedUser.passport_number,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    const matchesSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
+
+    return matchesRole && matchesSearch;
+  });
+
   return (
     <section className={styles.profile}>
       <div className={`pageSection ${styles.profile__shell}`}>
@@ -414,6 +434,21 @@ export default function ProfilePage() {
                 {createSuccess ? <p className={styles.profile__adminSuccess}>{createSuccess}</p> : null}
                 {roleError ? <p className={styles.profile__adminError}>{roleError}</p> : null}
 
+                <div className={styles.profile__filterBar}>
+                  <input
+                    className={styles.profile__input}
+                    type="search"
+                    placeholder="Search users by name, email, phone, address, or passport"
+                    value={userSearch}
+                    onChange={(event) => setUserSearch(event.target.value)}
+                  />
+                  <select className={styles.profile__input} value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)}>
+                    <option value="all">All roles</option>
+                    <option value="admin">Admins only</option>
+                    <option value="user">Users only</option>
+                  </select>
+                </div>
+
                 <div className={styles.profile__tableScroller}>
                   <table className={styles.profile__table}>
                     <thead>
@@ -427,7 +462,7 @@ export default function ProfilePage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {users.map((listedUser) => {
+                      {filteredUsers.map((listedUser) => {
                         const isCurrentUser = String(listedUser.id) === String(authUser?.id);
                         const isUpdatingRole = roleUpdateId === listedUser.id;
                         const isDeletingUser = deleteUserId === listedUser.id;
@@ -507,6 +542,8 @@ export default function ProfilePage() {
                     </tbody>
                   </table>
                 </div>
+
+                {!filteredUsers.length ? <p className={styles.profile__adminState}>No users match the current filters.</p> : null}
               </>
             )}
           </div>

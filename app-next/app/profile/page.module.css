@@ -152,6 +152,13 @@
   font-weight: 800;
 }
 
+.profile__filterBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(180px, 0.8fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
 .profile__tableScroller {
   overflow: auto;
   border: 1px solid var(--line);
@@ -478,6 +485,10 @@
   }
 
   .profile__createUserGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile__filterBar {
     grid-template-columns: 1fr;
   }
 }
