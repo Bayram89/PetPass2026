@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import api from "@/lib/api";
@@ -9,6 +9,7 @@ import formatDate from "@/app/components/FormatDate/FormatDate";
 import styles from "./PetsAllView.module.css";
 
 const ITEMS_PER_PAGE = 20;
+const COLUMNS = ["Name", "Species", "Breed", "Sex", "Birthday", "Country", "Passport", "Microchip", "Owner", "Email", "Phone"];
 
 export default function PetsAllView() {
   const { user, loading: isLoadingSession } = useAuth();
@@ -23,6 +24,9 @@ export default function PetsAllView() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [page, setPage] = useState(1);
+  const topScrollerRef = useRef(null);
+  const bottomScrollerRef = useRef(null);
+  const topScrollerInnerRef = useRef(null);
 
   const totalItems = pets?.length ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
@@ -72,6 +76,49 @@ export default function PetsAllView() {
     };
   }, [isAdmin, debouncedSearchTerm, sortConfig]);
 
+  useEffect(() => {
+    const topScroller = topScrollerRef.current;
+    const bottomScroller = bottomScrollerRef.current;
+    const topScrollerInner = topScrollerInnerRef.current;
+
+    if (!topScroller || !bottomScroller || !topScrollerInner) return;
+
+    const syncWidth = () => {
+      topScrollerInner.style.width = `${bottomScroller.scrollWidth}px`;
+    };
+
+    let syncingFromTop = false;
+    let syncingFromBottom = false;
+
+    const handleTopScroll = () => {
+      if (syncingFromBottom) return;
+      syncingFromTop = true;
+      bottomScroller.scrollLeft = topScroller.scrollLeft;
+      syncingFromTop = false;
+    };
+
+    const handleBottomScroll = () => {
+      syncWidth();
+      if (syncingFromTop) return;
+      syncingFromBottom = true;
+      topScroller.scrollLeft = bottomScroller.scrollLeft;
+      syncingFromBottom = false;
+    };
+
+    syncWidth();
+    topScroller.scrollLeft = bottomScroller.scrollLeft;
+
+    topScroller.addEventListener("scroll", handleTopScroll);
+    bottomScroller.addEventListener("scroll", handleBottomScroll);
+    window.addEventListener("resize", syncWidth);
+
+    return () => {
+      topScroller.removeEventListener("scroll", handleTopScroll);
+      bottomScroller.removeEventListener("scroll", handleBottomScroll);
+      window.removeEventListener("resize", syncWidth);
+    };
+  }, [pageItems]);
+
   if (isLoadingSession) {
     return <div className={styles.pets__state}>Loading...</div>;
   }
@@ -81,7 +128,6 @@ export default function PetsAllView() {
   if (petsError) return <div className={styles.pets__state}>Pets error: {petsError}</div>;
   if (petsLoading) return <div className={styles.pets__state}>Loading...</div>;
 
-  const columns = ["Name", "Species", "Breed", "Sex", "Birthday", "Country", "Passport", "Microchip", "Owner", "Email", "Phone"];
 
   const cell = (value) => (value === null || value === undefined || value === "" ? "—" : String(value));
 
@@ -108,11 +154,14 @@ export default function PetsAllView() {
         </div>
 
         <div className={`pageCard ${styles.pets__tableWrap}`}>
-          <div className={styles.pets__tableScroller}>
+          <div className={styles.pets__topScroller} ref={topScrollerRef} aria-label="Top horizontal scroll for pets table">
+            <div className={styles.pets__topScrollerInner} ref={topScrollerInnerRef} />
+          </div>
+          <div className={styles.pets__tableScroller} ref={bottomScrollerRef}>
             <table className={styles.pets__table} role="table">
               <thead>
                 <tr>
-                  {columns.map((column) => (
+                  {COLUMNS.map((column) => (
                     <th key={column} className={styles.pets__title} onClick={() => handleSort(column)}>
                       <span>{column}</span>
                       <span className={styles.pets__sortMark}>{sortConfig.key === column ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}</span>
