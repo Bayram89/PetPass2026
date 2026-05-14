@@ -289,10 +289,14 @@ export default function ProfilePage() {
     }
   }
 
+  const profileContact = user?.phone
+    ? (String(user.phone).trim().startsWith("+") ? String(user.phone).trim() : `+${String(user.phone).trim()}`)
+    : "Missing";
+
   const profileStats = [
     { label: "Pets on file", value: safePets.length },
-    { label: "Profile status", value: user?.passport_number ? "Ready" : "Needs details" },
-    { label: "Primary contact", value: user?.phone || "Missing" },
+    { label: "Profile status", value: user?.passport_number ? "Active" : "Needs details" },
+    { label: "Contact", value: profileContact },
   ];
 
   const normalizedSearch = userSearch.trim().toLowerCase();
