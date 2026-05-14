@@ -135,6 +135,7 @@
 
 .profile__input {
   min-height: 48px;
+  width: 100%;
   padding: 0 14px;
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -223,6 +224,27 @@
 .profile__actionGroup {
   display: flex;
   gap: 10px;
+  align-items: center;
+}
+
+.profile__editActions {
+  display: grid;
+  gap: 10px;
+  min-width: 240px;
+}
+
+.profile__subtleButton {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(42, 59, 53, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--text);
+  font-weight: 800;
+}
+
+.profile__subtleButton:disabled {
+  opacity: 0.5;
 }
 
 .profile__deleteButton {

@@ -22,10 +22,13 @@ export default function ProfilePage() {
   const safePets = Array.isArray(pets) ? pets : [];
   const [roleUpdateId, setRoleUpdateId] = useState(null);
   const [deleteUserId, setDeleteUserId] = useState(null);
+  const [editUserId, setEditUserId] = useState(null);
+  const [editForm, setEditForm] = useState(null);
   const [roleError, setRoleError] = useState("");
   const [createError, setCreateError] = useState("");
   const [createSuccess, setCreateSuccess] = useState("");
   const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [isSavingUser, setIsSavingUser] = useState(false);
   const [newUserForm, setNewUserForm] = useState({
     full_name: "",
     email: "",
@@ -162,6 +165,55 @@ export default function ProfilePage() {
       setRoleError(error.message || "Could not update the user role.");
     } finally {
       setRoleUpdateId(null);
+    }
+  }
+
+  function handleStartEditUser(listedUser) {
+    setRoleError("");
+    setCreateError("");
+    setCreateSuccess("");
+    setEditUserId(listedUser.id);
+    setEditForm({
+      full_name: listedUser.full_name || "",
+      email: listedUser.email || "",
+      phone: listedUser.phone || "",
+      address: listedUser.address || "",
+      date_of_birth: listedUser.date_of_birth ? String(listedUser.date_of_birth).slice(0, 10) : "1995-01-01",
+      passport_number: listedUser.passport_number || "",
+    });
+  }
+
+  function handleEditUserChange(event) {
+    const { name, value } = event.target;
+    setEditForm((current) => ({ ...current, [name]: value }));
+  }
+
+  function handleCancelEditUser() {
+    setEditUserId(null);
+    setEditForm(null);
+  }
+
+  async function handleSaveUser(listedUser) {
+    if (!editForm) return;
+
+    setRoleError("");
+    setCreateError("");
+    setCreateSuccess("");
+    setIsSavingUser(true);
+
+    try {
+      await api(`/api/users/${listedUser.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(editForm),
+      });
+      setCreateSuccess(`Updated ${editForm.full_name || listedUser.email}.`);
+      setEditUserId(null);
+      setEditForm(null);
+      await refreshUsers();
+    } catch (error) {
+      setRoleError(error.message || "Could not update the user.");
+    } finally {
+      setIsSavingUser(false);
     }
   }
 
@@ -379,26 +431,57 @@ export default function ProfilePage() {
                         const isCurrentUser = String(listedUser.id) === String(authUser?.id);
                         const isUpdatingRole = roleUpdateId === listedUser.id;
                         const isDeletingUser = deleteUserId === listedUser.id;
-                        const isBusy = isUpdatingRole || isDeletingUser;
+                        const isEditingUser = editUserId === listedUser.id;
+                        const isSavingThisUser = isSavingUser && isEditingUser;
+                        const isBusy = isUpdatingRole || isDeletingUser || isSavingThisUser;
 
                         return (
                           <tr key={listedUser.id}>
                             <td className={styles.profile__cell}>
-                              <span className={styles.profile__nameCell}>{listedUser.full_name || "Unknown user"}</span>
+                              {isEditingUser ? (
+                                <input className={styles.profile__input} name="full_name" value={editForm?.full_name || ""} onChange={handleEditUserChange} />
+                              ) : (
+                                <span className={styles.profile__nameCell}>{listedUser.full_name || "Unknown user"}</span>
+                              )}
                             </td>
-                            <td className={styles.profile__cell}>{listedUser.email || "Missing"}</td>
-                            <td className={styles.profile__cell}>{listedUser.phone || "Missing"}</td>
-                            <td className={styles.profile__cell}>{listedUser.address || "Missing"}</td>
+                            <td className={styles.profile__cell}>
+                              {isEditingUser ? <input className={styles.profile__input} name="email" type="email" value={editForm?.email || ""} onChange={handleEditUserChange} /> : listedUser.email || "Missing"}
+                            </td>
+                            <td className={styles.profile__cell}>
+                              {isEditingUser ? <input className={styles.profile__input} name="phone" value={editForm?.phone || ""} onChange={handleEditUserChange} /> : listedUser.phone || "Missing"}
+                            </td>
+                            <td className={styles.profile__cell}>
+                              {isEditingUser ? <input className={styles.profile__input} name="address" value={editForm?.address || ""} onChange={handleEditUserChange} /> : listedUser.address || "Missing"}
+                            </td>
                             <td className={styles.profile__cell}>
                               <span className={`${styles.profile__roleBadge} ${listedUser.admin ? styles.profile__roleBadgeAdmin : styles.profile__roleBadgeUser}`}>
                                 {listedUser.admin ? "Admin" : "User"}
                               </span>
                             </td>
                             <td className={styles.profile__cell}>
-                              {isCurrentUser ? (
+                              {isEditingUser ? (
+                                <div className={styles.profile__editActions}>
+                                  <input className={styles.profile__input} name="date_of_birth" type="date" value={editForm?.date_of_birth || ""} onChange={handleEditUserChange} />
+                                  <input className={styles.profile__input} name="passport_number" value={editForm?.passport_number || ""} onChange={handleEditUserChange} />
+                                  <button type="button" className={styles.profile__roleButton} onClick={() => handleSaveUser(listedUser)} disabled={isBusy}>
+                                    {isSavingThisUser ? "Saving..." : "Save"}
+                                  </button>
+                                  <button type="button" className={styles.profile__subtleButton} onClick={handleCancelEditUser} disabled={isBusy}>
+                                    Cancel
+                                  </button>
+                                </div>
+                              ) : isCurrentUser ? (
                                 <span className={styles.profile__lockedText}>Current account</span>
                               ) : (
                                 <div className={styles.profile__actionGroup}>
+                                  <button
+                                    type="button"
+                                    className={styles.profile__subtleButton}
+                                    onClick={() => handleStartEditUser(listedUser)}
+                                    disabled={Boolean(editUserId) || isBusy}
+                                  >
+                                    Edit
+                                  </button>
                                   <button
                                     type="button"
                                     className={styles.profile__roleButton}

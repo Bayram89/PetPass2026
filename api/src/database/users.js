@@ -38,7 +38,7 @@ export async function getUserByEmail(email) {
 
 export async function getAllUsers() {
   return dbClient("users")
-    .select("id", "full_name", "email", "phone", "address", "admin", "created_at", "updated_at")
+    .select("id", "full_name", "email", "phone", "address", "date_of_birth", "passport_number", "admin", "created_at", "updated_at")
     .orderBy("full_name", "asc");
 }
 
@@ -52,4 +52,21 @@ export async function updateUserRoleById(id, isAdmin) {
     .returning(["id", "full_name", "email", "phone", "address", "admin", "created_at", "updated_at"]);
 
   return user;
+}
+
+export async function updateUserDetailsById(id, user) {
+  const [updatedUser] = await dbClient("users")
+    .where("id", id)
+    .update({
+      full_name: user.full_name,
+      email: user.email,
+      phone: user.phone,
+      address: user.address,
+      date_of_birth: user.date_of_birth,
+      passport_number: user.passport_number,
+      updated_at: dbClient.fn.now(),
+    })
+    .returning(["id", "full_name", "email", "phone", "address", "date_of_birth", "passport_number", "admin", "created_at", "updated_at"]);
+
+  return updatedUser;
 }

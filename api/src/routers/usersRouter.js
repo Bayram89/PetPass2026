@@ -42,6 +42,31 @@ usersRouter.patch("/api/users/:id/role", requireAuth, requireRole("admin"), asyn
   response.send(updatedUser);
 });
 
+usersRouter.patch("/api/users/:id", requireAuth, requireRole("admin"), async (request, response) => {
+  const id = Number(request.params.id);
+  const user = request.body;
+
+  if (!id) return response.status(400).send({ error: "Valid user id is required" });
+
+  const userError = validateUserDetailsForAdminUpdate(user);
+  if (userError) return response.status(400).send({ error: userError });
+
+  const existingUsers = await db.getUserById(id);
+  const existingUser = Array.isArray(existingUsers) ? existingUsers[0] : existingUsers;
+
+  if (!existingUser) {
+    return response.status(404).send({ error: "user not found." });
+  }
+
+  const userWithSameEmail = await db.getUserByEmail(user.email);
+  if (userWithSameEmail && Number(userWithSameEmail.id) !== id) {
+    return response.status(400).send({ error: "Another user already uses this email." });
+  }
+
+  const updatedUser = await db.updateUserDetailsById(id, user);
+  response.send(updatedUser);
+});
+
 usersRouter.get("/api/users/:email",requireAuth, async (request, response) => {
   const email = request.params.email;
   if (!email) return response.status(400).send({ error: `No email is provided` });
@@ -110,6 +135,17 @@ const validateUserData = (user) => {
   if (!user.passport_number) return "User passport number is required";
   if (!user.created_at) return "User create date is required";
   if (!user.updated_at) return "User update date is required";
+};
+
+const validateUserDetailsForAdminUpdate = (user) => {
+  if (!user) return "user data is required.";
+
+  if (!user.full_name) return "User full name is required";
+  if (!user.email) return "User email is required";
+  if (!user.phone) return "User phone number is required";
+  if (!user.address) return "User address is requred";
+  if (!user.date_of_birth) return "User date of birth is required";
+  if (!user.passport_number) return "User passport number is required";
 };
 
 const createUserObject = (user) => {
