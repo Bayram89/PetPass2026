@@ -274,21 +274,51 @@
   font-weight: 700;
 }
 
-.profile__adminError {
-  margin-top: 18px;
-  color: #a83d2a;
-  font-weight: 700;
-}
-
-.profile__adminSuccess {
-  margin-top: 18px;
-  color: #2b6d4f;
-  font-weight: 700;
-}
-
 .profile__adminState {
   margin-top: 20px;
   color: var(--text-soft);
+}
+
+.profile__notice {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  font-weight: 700;
+}
+
+.profile__noticeInfo {
+  background: rgba(70, 105, 141, 0.08);
+  color: #2d4b66;
+}
+
+.profile__noticeSuccess {
+  background: rgba(43, 109, 79, 0.1);
+  color: #2b6d4f;
+}
+
+.profile__noticeWarning {
+  background: rgba(194, 126, 39, 0.11);
+  color: #8a5a17;
+}
+
+.profile__noticeError {
+  background: rgba(168, 61, 42, 0.1);
+  color: #a83d2a;
+}
+
+.profile__noticeDismiss {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-weight: 800;
 }
 
 .profile__loading {

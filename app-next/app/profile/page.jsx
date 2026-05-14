@@ -24,13 +24,11 @@ export default function ProfilePage() {
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [editUserId, setEditUserId] = useState(null);
   const [editForm, setEditForm] = useState(null);
-  const [roleError, setRoleError] = useState("");
-  const [createError, setCreateError] = useState("");
-  const [createSuccess, setCreateSuccess] = useState("");
   const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [isSavingUser, setIsSavingUser] = useState(false);
   const [userSearch, setUserSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
+  const [adminNotice, setAdminNotice] = useState(null);
   const [newUserForm, setNewUserForm] = useState({
     full_name: "",
     email: "",
@@ -152,9 +150,7 @@ export default function ProfilePage() {
   }
 
   async function handleRoleToggle(listedUser) {
-    setRoleError("");
-    setCreateError("");
-    setCreateSuccess("");
+    setAdminNotice({ tone: "info", message: `Updating ${listedUser.full_name || listedUser.email}...` });
     setRoleUpdateId(listedUser.id);
 
     try {
@@ -163,17 +159,19 @@ export default function ProfilePage() {
         body: JSON.stringify({ admin: !listedUser.admin }),
       });
       await refreshUsers();
+      setAdminNotice({
+        tone: "success",
+        message: `${listedUser.full_name || listedUser.email} is now ${listedUser.admin ? "a normal user" : "an admin"}.`,
+      });
     } catch (error) {
-      setRoleError(error.message || "Could not update the user role.");
+      setAdminNotice({ tone: "error", message: error.message || "Could not update the user role." });
     } finally {
       setRoleUpdateId(null);
     }
   }
 
   function handleStartEditUser(listedUser) {
-    setRoleError("");
-    setCreateError("");
-    setCreateSuccess("");
+    setAdminNotice(null);
     setEditUserId(listedUser.id);
     setEditForm({
       full_name: listedUser.full_name || "",
@@ -198,9 +196,7 @@ export default function ProfilePage() {
   async function handleSaveUser(listedUser) {
     if (!editForm) return;
 
-    setRoleError("");
-    setCreateError("");
-    setCreateSuccess("");
+    setAdminNotice({ tone: "info", message: `Saving changes for ${editForm.full_name || listedUser.email}...` });
     setIsSavingUser(true);
 
     try {
@@ -208,12 +204,12 @@ export default function ProfilePage() {
         method: "PATCH",
         body: JSON.stringify(editForm),
       });
-      setCreateSuccess(`Updated ${editForm.full_name || listedUser.email}.`);
+      setAdminNotice({ tone: "success", message: `Updated ${editForm.full_name || listedUser.email}.` });
       setEditUserId(null);
       setEditForm(null);
       await refreshUsers();
     } catch (error) {
-      setRoleError(error.message || "Could not update the user.");
+      setAdminNotice({ tone: "error", message: error.message || "Could not update the user." });
     } finally {
       setIsSavingUser(false);
     }
@@ -223,9 +219,7 @@ export default function ProfilePage() {
     const confirmed = window.confirm(`Delete ${listedUser.full_name || listedUser.email}? This will also remove pets owned by this user.`);
     if (!confirmed) return;
 
-    setRoleError("");
-    setCreateError("");
-    setCreateSuccess("");
+    setAdminNotice({ tone: "warning", message: `Deleting ${listedUser.full_name || listedUser.email}...` });
     setDeleteUserId(listedUser.id);
 
     try {
@@ -233,8 +227,9 @@ export default function ProfilePage() {
         method: "DELETE",
       });
       await refreshUsers();
+      setAdminNotice({ tone: "success", message: `Deleted ${listedUser.full_name || listedUser.email}.` });
     } catch (error) {
-      setRoleError(error.message || "Could not delete the user.");
+      setAdminNotice({ tone: "error", message: error.message || "Could not delete the user." });
     } finally {
       setDeleteUserId(null);
     }
@@ -247,8 +242,7 @@ export default function ProfilePage() {
 
   async function handleCreateUser(event) {
     event.preventDefault();
-    setCreateError("");
-    setCreateSuccess("");
+    setAdminNotice({ tone: "info", message: "Creating local user..." });
     setIsCreatingUser(true);
 
     try {
@@ -261,7 +255,7 @@ export default function ProfilePage() {
           updated_at: now,
         }),
       });
-      setCreateSuccess("New local user created.");
+      setAdminNotice({ tone: "success", message: "New local user created." });
       setNewUserForm({
         full_name: "",
         email: "",
@@ -272,7 +266,7 @@ export default function ProfilePage() {
       });
       await refreshUsers();
     } catch (error) {
-      setCreateError(error.message || "Could not create the user.");
+      setAdminNotice({ tone: "error", message: error.message || "Could not create the user." });
     } finally {
       setIsCreatingUser(false);
     }
@@ -430,9 +424,14 @@ export default function ProfilePage() {
                   </button>
                 </form>
 
-                {createError ? <p className={styles.profile__adminError}>{createError}</p> : null}
-                {createSuccess ? <p className={styles.profile__adminSuccess}>{createSuccess}</p> : null}
-                {roleError ? <p className={styles.profile__adminError}>{roleError}</p> : null}
+                {adminNotice ? (
+                  <div className={`${styles.profile__notice} ${styles[`profile__notice${adminNotice.tone[0].toUpperCase()}${adminNotice.tone.slice(1)}`]}`}>
+                    <span>{adminNotice.message}</span>
+                    <button type="button" className={styles.profile__noticeDismiss} onClick={() => setAdminNotice(null)}>
+                      Dismiss
+                    </button>
+                  </div>
+                ) : null}
 
                 <div className={styles.profile__filterBar}>
                   <input
