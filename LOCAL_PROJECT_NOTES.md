@@ -2,7 +2,7 @@
 
 ## Date
 
-2026-05-09
+2026-05-14
 
 ## Purpose Of This File
 
@@ -13,7 +13,7 @@ Use it in future sessions to quickly understand:
 - what is intentionally different from Vadim's shared setup,
 - and what to do next.
 
-## What We Changed Today
+## What We Changed Across The Recent Sessions
 
 1. Confirmed that the local project in `C:\Users\Bayram\Projects\PetPass` is working independently on this machine.
 2. Started the local PostgreSQL database with Docker using `db/docker-compose.yml`.
@@ -24,6 +24,11 @@ Use it in future sessions to quickly understand:
 7. Replaced the old shared seed data in `db/init/002_seed.sql` with a local-only seed owned by Bayram.
 8. Recreated the Docker Postgres volume so the old shared records were removed from the live database.
 9. Verified local login and role behavior through the API after reseeding.
+10. Added an admin-only user list view in the profile page.
+11. Added local admin controls to promote users to admin or demote them back to normal users.
+12. Added local admin controls to delete users, while blocking deletion of the current signed-in account.
+13. Added a localized demo dataset seed file in `db/seed_demo_33.sql`.
+14. Confirmed the localized demo dataset commit was already pushed to `origin/main`.
 
 ## Current Local Setup
 
@@ -59,6 +64,7 @@ The local database is now intentionally minimal and under Bayram's control.
 - database content,
 - admin/user ownership,
 - and future role management.
+4. The codebase currently includes local admin tooling in the profile UI, so future sessions should treat user management as part of the active app, not just a database-only task.
 
 ## Conversation And Correspondence Summary
 
@@ -84,7 +90,7 @@ The local database is now intentionally minimal and under Bayram's control.
 1. Replace the old shared seed data with Bayram's own local seed data.
 2. Make Bayram the default admin in the local database.
 3. Remove old shared demo users from the local database by recreating the Docker volume.
-4. Optionally add a local admin-management flow later so Bayram can promote or demote users without editing the database manually.
+4. Add a local admin-management flow so Bayram can promote or demote users without editing the database manually.
 5. Keep one reusable handoff file in the repo root so future sessions can quickly continue from the latest state.
 
 ### Final Agreed Direction
@@ -92,6 +98,7 @@ The local database is now intentionally minimal and under Bayram's control.
 1. This PetPass setup should be usable locally without needing Vadim's approval or database access.
 2. Bayram should own the local database state and local admin control.
 3. The current work should remain local-only.
+4. The current local app should support practical day-to-day user administration through the UI where possible.
 
 ## Files Changed For The Local Database Setup
 
@@ -100,6 +107,15 @@ The local database is now intentionally minimal and under Bayram's control.
 - `db/init/002_seed.sql`
 - `api/.env`
 - `app-next/.env.local`
+
+## Files Changed For Admin Management And Demo Data
+
+- `api/src/database/users.js`
+- `api/src/routers/usersRouter.js`
+- `app-next/app/profile/components/DBFunctions/FetchAllUsers.js`
+- `app-next/app/profile/page.jsx`
+- `app-next/app/profile/page.module.css`
+- `db/seed_demo_33.sql`
 
 ## Notes About The Running App
 
@@ -115,13 +131,19 @@ The local database is now intentionally minimal and under Bayram's control.
 4. Dev login worked for `bayram9erdem@gmail.com`.
 5. The API returned Bayram as `admin`.
 6. Pet and vaccination data came from the local database.
+7. The admin profile page now supports listing users.
+8. The admin profile page now supports creating local users.
+9. The admin profile page now supports changing user roles.
+10. The admin profile page now supports deleting other users.
+11. The current signed-in admin account cannot demote or delete itself through the UI flow.
+12. On 2026-05-14, the local stack was rechecked again and both `http://127.0.0.1:8000` and `http://127.0.0.1:3000` returned `200`.
 
 ## Next Things To Do
 
-1. Add a simple local admin-management flow so Bayram can promote or demote users without manual database edits.
-2. Add a local UI or admin page for managing users and roles.
-3. Decide whether to keep sample seed data or switch to a completely empty local database after development is stable.
-4. Clean up local log artifacts like `api-dev.log`, `api-dev.err.log`, `app-dev.log`, and `app-dev.err.log` if they are not needed.
+1. Add edit-user support in the admin panel so existing local users can be updated without direct database edits.
+2. Decide whether to keep sample seed data or switch to a completely empty local database after development is stable.
+3. Clean up local log artifacts like `api-dev.log`, `api-dev.err.log`, `app-dev.log`, and `app-dev.err.log` if they are not needed.
+4. Resolve the duplicate lockfile warning from Next.js if it becomes annoying during development.
 5. Optionally document a simple startup checklist for future sessions:
 - start Docker,
 - run the DB,
