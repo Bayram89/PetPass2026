@@ -38,7 +38,32 @@ export async function getUserByEmail(email) {
 
 export async function getAllUsers() {
   return dbClient("users")
-    .select("id", "full_name", "email", "phone", "address", "date_of_birth", "passport_number", "admin", "created_at", "updated_at")
+    .leftJoin("pets", "pets.owner_user_id", "users.id")
+    .select(
+      "users.id",
+      "users.full_name",
+      "users.email",
+      "users.phone",
+      "users.address",
+      "users.date_of_birth",
+      "users.passport_number",
+      "users.admin",
+      "users.created_at",
+      "users.updated_at"
+    )
+    .count("pets.id as pet_count")
+    .groupBy(
+      "users.id",
+      "users.full_name",
+      "users.email",
+      "users.phone",
+      "users.address",
+      "users.date_of_birth",
+      "users.passport_number",
+      "users.admin",
+      "users.created_at",
+      "users.updated_at"
+    )
     .orderBy("full_name", "asc");
 }
 

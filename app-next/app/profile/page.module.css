@@ -215,6 +215,27 @@
   color: var(--text-soft);
 }
 
+.profile__petCountBadge,
+.profile__petCountEmpty {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.profile__petCountBadge {
+  background: rgba(194, 126, 39, 0.11);
+  color: #8a5a17;
+}
+
+.profile__petCountEmpty {
+  background: rgba(42, 59, 53, 0.08);
+  color: var(--text-soft);
+}
+
 .profile__roleButton {
   min-height: 38px;
   padding: 0 14px;

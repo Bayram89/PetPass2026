@@ -216,8 +216,25 @@ export default function ProfilePage() {
   }
 
   async function handleDeleteUser(listedUser) {
-    const confirmed = window.confirm(`Delete ${listedUser.full_name || listedUser.email}? This will also remove pets owned by this user.`);
+    const petCount = Number(listedUser.pet_count || 0);
+    const baseName = listedUser.full_name || listedUser.email;
+    const confirmed = window.confirm(
+      petCount > 0
+        ? `Delete ${baseName}? This account currently owns ${petCount} pet record${petCount === 1 ? "" : "s"}, and those records will be removed too.`
+        : `Delete ${baseName}?`
+    );
     if (!confirmed) return;
+
+    if (petCount > 0) {
+      const typedConfirmation = window.prompt(`Type DELETE to confirm removing ${baseName} and ${petCount} linked pet record${petCount === 1 ? "" : "s"}.`);
+      if (typedConfirmation !== "DELETE") {
+        setAdminNotice({
+          tone: "warning",
+          message: `Deletion cancelled for ${baseName}. No records were removed.`,
+        });
+        return;
+      }
+    }
 
     setAdminNotice({ tone: "warning", message: `Deleting ${listedUser.full_name || listedUser.email}...` });
     setDeleteUserId(listedUser.id);
@@ -289,7 +306,7 @@ export default function ProfilePage() {
       listedUser.passport_number,
     ]
       .filter(Boolean)
-      .join(" ")
+                        .join(" ")
       .toLowerCase();
     const matchesSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
 
@@ -456,6 +473,7 @@ export default function ProfilePage() {
                         <th className={styles.profile__title}>Email</th>
                         <th className={styles.profile__title}>Phone</th>
                         <th className={styles.profile__title}>Address</th>
+                        <th className={styles.profile__title}>Pets</th>
                         <th className={styles.profile__title}>Role</th>
                         <th className={styles.profile__title}>Action</th>
                       </tr>
@@ -486,6 +504,11 @@ export default function ProfilePage() {
                             </td>
                             <td className={styles.profile__cell}>
                               {isEditingUser ? <input className={styles.profile__input} name="address" value={editForm?.address || ""} onChange={handleEditUserChange} /> : listedUser.address || "Missing"}
+                            </td>
+                            <td className={styles.profile__cell}>
+                              <span className={Number(listedUser.pet_count || 0) > 0 ? styles.profile__petCountBadge : styles.profile__petCountEmpty}>
+                                {Number(listedUser.pet_count || 0)} pet{Number(listedUser.pet_count || 0) === 1 ? "" : "s"}
+                              </span>
                             </td>
                             <td className={styles.profile__cell}>
                               <span className={`${styles.profile__roleBadge} ${listedUser.admin ? styles.profile__roleBadgeAdmin : styles.profile__roleBadgeUser}`}>
