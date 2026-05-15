@@ -6,6 +6,7 @@ import { LogIn, Menu, PawPrint, UserRound, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
+import { withApiBase } from "@/lib/api-base";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
@@ -45,7 +46,7 @@ export default function Navbar() {
     setMobileOpen(false);
 
     try {
-      await fetch("/auth/logout", { method: "POST", credentials: "include" });
+      await fetch(withApiBase("/auth/logout"), { method: "POST", credentials: "include" });
     } catch {}
 
     await logout();
@@ -60,7 +61,7 @@ export default function Navbar() {
 
   function handleLoginRedirect() {
     localStorage.setItem("returnTo", pathname || "/home");
-    window.location.href = "/auth/google";
+    window.location.href = withApiBase("/auth/google");
   }
 
   return (

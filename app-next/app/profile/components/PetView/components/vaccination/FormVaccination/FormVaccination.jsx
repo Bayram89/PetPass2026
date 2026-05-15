@@ -5,6 +5,7 @@ import styles from "./VaccinationForm.module.css";
 import FetchUserData from "@/app/profile/components/DBFunctions/FetchUserData";
 import { useAuth } from "@/app/providers";
 import api from "@/lib/api"; // change to "@/app/lib/api" if that's where your file is
+import { withApiBase } from "@/lib/api-base";
 
 import { useEffect, useState } from "react";
 
@@ -44,7 +45,7 @@ export default function VaccinationForm({ petId, onCreated }) {
   if (!authUser) {
     const handleLogin = () => {
       localStorage.setItem("returnTo", `/profile/pets/${petId}`);
-      window.location.href = "/auth/google"; // use relative path if you added Next rewrites
+      window.location.href = withApiBase("/auth/google");
     };
     return (
       <div>

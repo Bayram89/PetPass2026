@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ShieldCheck, Stethoscope, PlaneTakeoff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
+import { withApiBase } from "@/lib/api-base";
 import styles from "./Hero.module.css";
 
 const proofPoints = [
@@ -27,7 +28,7 @@ export default function Hero() {
   function handlePrimaryAction() {
     if (!isAuthed) {
       localStorage.setItem("returnTo", "/profile/edit");
-      window.location.href = "/auth/google";
+      window.location.href = withApiBase("/auth/google");
       return;
     }
 

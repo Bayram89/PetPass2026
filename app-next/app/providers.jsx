@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { withApiBase } from "@/lib/api-base";
 
 const AuthContext = createContext({
   user: null,
@@ -15,7 +16,7 @@ export default function AuthProvider({ children }) {
 
   async function refresh() {
     try {
-      const res = await fetch(`/api/me`, {
+      const res = await fetch(withApiBase("/api/me"), {
         credentials: "include",
         cache: "no-store",
       });
@@ -31,7 +32,7 @@ export default function AuthProvider({ children }) {
 
   async function logout() {
     try {
-      await fetch(`/auth/logout`, {
+      await fetch(withApiBase("/auth/logout"), {
         method: "POST",
         credentials: "include",
       });

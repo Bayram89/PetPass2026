@@ -1,5 +1,7 @@
+import { withApiBase } from "./api-base";
+
 export default async function api(path, init = {}) {
-  const res = await fetch(path, {
+  const res = await fetch(withApiBase(path), {
     credentials: "include",
     ...init,
     headers: {

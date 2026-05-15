@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import api from "@/lib/api";
+import { withApiBase } from "@/lib/api-base";
 import FetchUserData from "../DBFunctions/FetchUserData";
 import CountrySelect from "../PetView/components/api/flags";
 import styles from "./AddPet.module.css";
@@ -43,7 +44,7 @@ export default function AddPetData() {
       localStorage.setItem("returnTo", window.location.pathname || "/profile/pets/new");
     } catch {}
 
-    window.location.href = "/auth/google";
+    window.location.href = withApiBase("/auth/google");
   }
 
   async function handleAddPet(event) {

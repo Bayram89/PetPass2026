@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/app/providers";
 import FetchUserData from "../components/DBFunctions/FetchUserData";
 import api from "@/lib/api";
+import { withApiBase } from "@/lib/api-base";
 import styles from "./page.module.css";
 
 export default function SignupPage() {
@@ -37,7 +38,7 @@ export default function SignupPage() {
 
   function handleGoogle() {
     localStorage.setItem("returnTo", "/profile/edit");
-    window.location.href = "/auth/google";
+    window.location.href = withApiBase("/auth/google");
   }
 
   async function handleSubmit() {

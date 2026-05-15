@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
+import { withApiBase } from "@/lib/api-base";
 import styles from "./ProfileVaccination.module.css";
 
 import formatDate from "@/app/components/FormatDate/FormatDate";
@@ -31,8 +32,7 @@ export default function Vaccinations({ petId, pageSize = 3 }) {
     const handleLogin = () => {
       // return to the pet page after login
       localStorage.setItem("returnTo", `/profile/pets/${petId}`);
-      // If you didn't add Next rewrites, use `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
-      window.location.href = "/auth/google";
+      window.location.href = withApiBase("/auth/google");
     };
     return (
       <main className={styles.vaccination}>
