@@ -1,7 +1,11 @@
 import dbClient from "./database_client.js";
 
 export async function addUser(user) {
-  return dbClient("users").insert(user);
+  const [createdUser] = await dbClient("users")
+    .insert(user)
+    .returning(["id", "full_name", "email", "googleid", "photo", "admin", "created_at", "updated_at"]);
+
+  return createdUser;
 }
 
 export async function deleteUserByGoogleId(id) {
@@ -21,6 +25,18 @@ export async function getUserById(id) {
 
 export async function updateUserByEmail(email, user) {
   return dbClient("users").where("email", email).update(user);
+}
+
+export async function updateUser(id, user) {
+  const [updatedUser] = await dbClient("users")
+    .where("id", id)
+    .update({
+      ...user,
+      updated_at: dbClient.fn.now(),
+    })
+    .returning(["id", "full_name", "email", "googleid", "photo", "admin", "created_at", "updated_at"]);
+
+  return updatedUser;
 }
 
 export async function getUserByName(userName) {

@@ -35,12 +35,11 @@ passport.use(
           });
         } else if (!user.googleid || user.googleid !== googleId) {
           try {
-            await db.updateUser(user.id, {
+            user = await db.updateUser(user.id, {
               googleid: googleId,
               full_name,
               photo,
             });
-            user = await db.getUserByEmail(email);
           } catch {
             //
           }
