@@ -9,6 +9,7 @@ import petsRouter from "./routers/petsRouter.js";
 import usersRouter from "./routers/usersRouter.js";
 import vaccinationsRouter from "./routers/vaccinationsRouter.js";
 import authRouter from "./routers/authRoutes.js";
+import importRouter from "./routers/importRouter.js";
 
 import dotenv from "dotenv";
 
@@ -81,6 +82,7 @@ app.get("/", (req, res) => {
 
 app.use(authRouter);
 
+app.use(importRouter);
 app.use(petsRouter);
 app.use(usersRouter);
 app.use("/api", vaccinationsRouter);
