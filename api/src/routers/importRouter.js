@@ -39,7 +39,15 @@ importRouter.get("/api/admin/import-render-db", async (request, response, next) 
       counts: counts.rows,
     });
   } catch (error) {
-    next(error);
+    console.error("Render database import failed:", error);
+    response.status(500).json({
+      error: "Render database import failed.",
+      message: error.message,
+      code: error.code,
+      detail: error.detail,
+      hint: error.hint,
+      position: error.position,
+    });
   }
 });
 
