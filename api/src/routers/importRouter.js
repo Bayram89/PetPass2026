@@ -7,7 +7,7 @@ import dbClient from "../database/database_client.js";
 const importRouter = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const importSqlPath = path.resolve(__dirname, "../../../db/render_manual_import.sql");
+const importSqlPath = path.resolve(__dirname, "../database/render_manual_import.sql");
 
 importRouter.get("/api/admin/import-render-db", async (request, response, next) => {
   try {
