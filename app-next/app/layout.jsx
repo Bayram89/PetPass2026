@@ -3,6 +3,7 @@ import { Fraunces, Manrope } from "next/font/google";
 import Navbar from "@/app/components/Navbar/Navbar";
 import Footer from "@/app/components/Footer/Footer";
 import AuthProvider from "./providers";
+import ClientErrorTrap from "@/app/components/ClientErrorTrap/ClientErrorTrap";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${fraunces.variable} ${manrope.variable}`}>
         <AuthProvider>
+          <ClientErrorTrap />
           <div className="siteShell">
             <Navbar />
             <main className="siteMain">{children}</main>
