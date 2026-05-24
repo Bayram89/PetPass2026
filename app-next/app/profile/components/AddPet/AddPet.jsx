@@ -86,9 +86,12 @@ export default function AddPetData() {
   }
 
   function isValidUrl(value) {
+    if (!value) return false;
+    if (value.startsWith("/")) return true;
+
     try {
-      new URL(value);
-      return true;
+      const parsed = new URL(value);
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
     } catch {
       return false;
     }

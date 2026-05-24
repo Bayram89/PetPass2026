@@ -5,6 +5,7 @@ import { Pencil, Syringe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AddVaccination from "./vaccination/AddVaccination/AddVaccination";
 import ProfileVaccination from "./vaccination/ProfileVaccination/ProfileVaccination";
+import { getPetPhotoUrl } from "@/lib/pet-images";
 import styles from "./PetProfile.module.css";
 
 export function PetProfileDisplay({ pet, onEdit, formatDate, isAdmin }) {
@@ -33,7 +34,7 @@ export function PetProfileDisplay({ pet, onEdit, formatDate, isAdmin }) {
       <header className={styles.pet__hero}>
         <div className={styles.pet__heroIdentity}>
           <div className={styles.pet__avatarWrap}>
-            <Image src={pet?.photo_url || "/images/loading.svg"} alt={pet.name || "Pet"} width={220} height={220} className={styles.pet__avatar} priority />
+            <Image src={getPetPhotoUrl(pet)} alt={pet.name || "Pet"} width={220} height={220} className={styles.pet__avatar} priority />
           </div>
 
           <div className={styles.pet__heroCopy}>

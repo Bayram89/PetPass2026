@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import api from "@/lib/api";
+import { getPetPhotoUrl } from "@/lib/pet-images";
 import FetchUserData from "./components/DBFunctions/FetchUserData";
 import useFetchAllUsers from "./components/DBFunctions/FetchAllUsers";
 import useFetchUserPetData from "./components/DBFunctions/FetchUserPetData";
@@ -95,6 +96,7 @@ export default function ProfilePage() {
 
   function isValidUrl(value) {
     if (!value) return false;
+    if (value.startsWith("/")) return true;
 
     try {
       const parsed = new URL(value);
@@ -369,7 +371,8 @@ export default function ProfilePage() {
             <div className={styles.profile__carousel} ref={carouselRef} data-count={count} style={{ "--count": count, "--index": index }} aria-roledescription="carousel" aria-label="Pets carousel">
               <div className={styles.profile__carouselStage}>
                 {safePets.map((pet, petIndex) => {
-                  const imageSrc = isValidUrl(pet?.photo_url) ? pet.photo_url : "/images/logo.png";
+                  const photoUrl = getPetPhotoUrl(pet, "/images/logo.png");
+                  const imageSrc = isValidUrl(photoUrl) ? photoUrl : "/images/logo.png";
 
                   return (
                     <figure

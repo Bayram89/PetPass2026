@@ -39,6 +39,7 @@ INSERT INTO pets (
   country_of_issue,
   issue_date,
   current_status,
+  photo_url,
   created_at,
   updated_at
 ) OVERRIDING SYSTEM VALUE VALUES
@@ -56,6 +57,7 @@ INSERT INTO pets (
     'DK',
     CURRENT_DATE,
     'Active',
+    '/images/nora.png',
     NOW(),
     NOW()
   );

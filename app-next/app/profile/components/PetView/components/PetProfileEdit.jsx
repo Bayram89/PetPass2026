@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { Check, X } from "lucide-react";
 import { useAuth } from "@/app/providers";
+import { getPetPhotoUrl } from "@/lib/pet-images";
 import CountrySelect from "./api/flags";
 import styles from "./PetProfile.module.css";
 
@@ -20,6 +21,7 @@ export function PetProfileEdit({ draft, setDraft, onSave, onCancel }) {
 
   function isValidUrl(value) {
     if (!value) return false;
+    if (value.startsWith("/")) return true;
 
     try {
       const parsed = new URL(value);
@@ -36,7 +38,8 @@ export function PetProfileEdit({ draft, setDraft, onSave, onCancel }) {
     return date.toISOString().slice(0, 10);
   }
 
-  const imageSrc = isValidUrl(draft?.photo_url) ? draft.photo_url : "/images/loading.svg";
+  const photoUrl = getPetPhotoUrl(draft);
+  const imageSrc = isValidUrl(photoUrl) ? photoUrl : "/images/loading.svg";
 
   return (
     <form
