@@ -1,119 +1,46 @@
-<pre>
 # PetPass
 
 Live demo: https://petpass2026-frontend.onrender.com
 
-PetPass is a full-stack web application that manages users and pets. It includes:
-- Backend API for CRUD operations on users and pets .  
-- Frontend built with React and Next.js.  
-- Google OAuth login for secure authentication.  
-- Admin dashboard for managing users, pets, and vaccination records.
+PetPass is a full-stack web app for managing pet owners, pet passport details, and vaccination records.
 
+This project started as a shared final project built by a team of four developers. This repository is my continued version of the project, where I keep improving the app while being clear that the original idea and first implementation were team work.
 
-## How-to Guide
+My contribution included both frontend and backend tasks. I worked across the stack because I enjoy understanding how the user interface, API, authentication, and database fit together as one product.
 
-These steps will get you up and running locally for development and testing.
+## Features
 
-Requirements:
-"next": "15.5.0",
-"react": "19.1.0",
-"node": "^20.12.1", 
+- Google OAuth login
+- Admin dashboard for users and pets
+- Pet profile pages with passport and microchip details
+- Vaccination records
+- PostgreSQL database
+- Next.js frontend and Express backend
 
-### Clone the Repository
+## Tech Stack
 
-Open your terminal and navigate to a desired folder.
+- Frontend: Next.js, React, CSS Modules
+- Backend: Node.js, Express
+- Database: PostgreSQL
+- Authentication: Google OAuth, Passport.js
+- Deployment: Render
 
-git clone https://github.com/VadimTofan/PetPass.git
+## Local Development
 
-cd PetPass ─┬─ cd api —— npm install —— npm run dev
-            └─ cd app-next —— npm install —— npm run dev
+Backend:
 
-Get the environmental variables from one of our team members.
+```bash
+cd api
+npm install
+npm run dev
+```
 
-Place the .env and .env.local files according to the file structure.
+Frontend:
 
-<b>You're set!</b>
+```bash
+cd app-next
+npm install
+npm run dev
+```
 
-
-Our File Structure:
-
-PetPass/
-├─ .git/                               # Git essential files
-├─ api/                                # Backend API
-│  ├─ .env
-│  └─ src                                  
-│     ├─ routes/                       # API route handlers
-│     │  ├─ pets.js                    # CRUD for pets
-│     │  └─ users.js                   # CRUD for users
-│     │                                 
-│     ├─ database/                     # Database Access
-│     │  ├─ pets.js                    # Pets database queries
-│     │  └─ users.js                   # Users database queries
-│     │    
-│     └─ index.js                      # API entry point
-│
-├─ app-next/                           # Next.js frontend
-│  ├─ .env.local
-│  ├─ public/                          # Static assets (logos, images, etc.)
-│  │  └─ favicon.ico
-│  │
-│  └─ app/                             # App Router (Next.js 13+)
-│     ├─ layout.js
-│     ├─ globals.css
-│     ├─ page.js                       # Landing page (/)
-│     │
-│     ├─ about/                        # /about
-│     │  ├─ page.js
-│     │  └─ about.module.css
-│     │
-│     ├─ api/                          # /api-auth
-│     │  ├─ auth\[...nextauth]
-│     │  │  └─ route.js
-│     │  └─ users\sync
-│     │     └─ route.js
-│     │ 
-│     ├─ components/                   # Reusable UI components
-│     │  ├─ navbar/                    # Navbar
-│     │  │  ├─ Navbar.js               
-│     │  │  └─ Navbar.module.css
-│     │  │
-│     │  └─ footer/                    # Footer
-│     │     ├─ Footer.js
-│     │     └─ Footer.module.css
-│     │
-│     ├─ contact/                      # /contact
-│     │  ├─ page.js
-│     │  └─ contact.module.css
-│     │
-│     ├─ features/                     # /features
-│     │  ├─ page.js
-│     │  └─ features.module.css
-│     │
-│     ├─ home/                         # Homepage("/home")
-│     │  ├─ category/
-│     │  │  ├─ Category.js
-│     │  │  └─ Category.module.css
-│     │  │
-│     │  ├─ hero/
-│     │  │  ├─ Hero.js
-│     │  │  └─ Hero.module.css
-│     │  │
-│     │  └─ promotion/
-│     │     ├─ Promotion.js
-│     │     └─ Promotion.module.css
-│     │
-│     ├─ profile/                      # /profile
-│     │  ├─ page.js
-│     │  ├─ profile.module.css
-│     │  ├─ components                 # Profile components
-│     │  │  ├─ DBFunctions             # DB Access components
-│     │  │  ├─ PetsAllView             # Multiple pet view
-│     │  │  └─ PetView                 # Single pet view
-│     │  │
-│     │  ├─ edit                       # /profile/edit
-│     │  └─ pets
-│     │     └─ [pet]
-│
-├─ .gitignore
-└─ README.md
-</pre>
+Environment variables are required for the database connection and Google OAuth credentials.
