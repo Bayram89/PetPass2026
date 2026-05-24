@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import api from "@/lib/api";
-import useFetchUserPetData from "../DBFunctions/FetchUserPetData";
 import formatDate from "@/app/components/FormatDate/FormatDate";
 import { PetProfileDisplay } from "./components/PetProfileDisplay";
 import { PetProfileEdit } from "./components/PetProfileEdit";
@@ -39,9 +38,8 @@ export default function FetchPetData() {
     fetchPet();
   }, [fetchPet]);
 
-  const { pets = [], error: petsError, isLoading } = useFetchUserPetData(user?.id);
   const isAdmin = user?.role === "admin";
-  const isOwner = pets?.some((userPet) => userPet.id.toString() === id);
+  const isOwner = Boolean(user?.id && pet?.owner_user_id && String(pet.owner_user_id) === String(user.id));
 
   async function handleSaveProfile() {
     try {
@@ -71,7 +69,7 @@ export default function FetchPetData() {
     setIsEditing(false);
   }
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <section className={styles.pet}>
         <div className={`pageCard ${styles.pet__card}`}>
@@ -81,11 +79,11 @@ export default function FetchPetData() {
     );
   }
 
-  if (error || petsError) {
+  if (error) {
     return (
       <section className={styles.pet}>
         <div className={`pageCard ${styles.pet__card}`}>
-          <p className={styles.pet__loading}>Error: {error || petsError}</p>
+          <p className={styles.pet__loading}>Error: {error}</p>
         </div>
       </section>
     );

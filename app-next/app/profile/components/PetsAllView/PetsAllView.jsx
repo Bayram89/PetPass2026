@@ -62,7 +62,7 @@ export default function PetsAllView() {
         }
 
         const data = await api(`/api/pets?${params.toString()}`, { cache: "no-store" });
-        if (!cancelled) setPets(data);
+        if (!cancelled) setPets(Array.isArray(data) ? data : data?.pets ?? []);
       } catch (error) {
         if (!cancelled) setPetsError(error.message || "Unknown error");
       } finally {
@@ -129,7 +129,9 @@ export default function PetsAllView() {
   if (petsLoading) return <div className={styles.pets__state}>Loading...</div>;
 
 
-  const cell = (value) => (value === null || value === undefined || value === "" ? "—" : String(value));
+  const startItem = totalItems ? (safePage - 1) * ITEMS_PER_PAGE + 1 : 0;
+  const endItem = Math.min(safePage * ITEMS_PER_PAGE, totalItems);
+  const cell = (value) => (value === null || value === undefined || value === "" ? "-" : String(value));
 
   function handleSort(column) {
     setSortConfig((previous) => (previous.key === column ? { key: column, direction: previous.direction === "asc" ? "desc" : "asc" } : { key: column, direction: "asc" }));
@@ -148,7 +150,7 @@ export default function PetsAllView() {
           <div className={styles.pets__tools}>
             <input className={styles.pets__input} type="text" placeholder="Search pets..." value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
             <span className={styles.pets__summary}>
-              Showing {(safePage - 1) * ITEMS_PER_PAGE + 1}-{Math.min(safePage * ITEMS_PER_PAGE, totalItems)} of {totalItems}
+              Showing {startItem}-{endItem} of {totalItems}
             </span>
           </div>
         </div>
