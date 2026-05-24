@@ -1,12 +1,13 @@
 <pre>
 # PetPass
 
-You can access the live version of our web-site on: https://petpass404.netlify.app/
+Live demo: https://petpass2026-frontend.onrender.com
 
 PetPass is a full-stack web application that manages users and pets. It includes:
 - Backend API for CRUD operations on users and pets .  
 - Frontend built with React and Next.js.  
-- Authentication via NextAuth.  
+- Google OAuth login for secure authentication.  
+- Admin dashboard for managing users, pets, and vaccination records.
 
 
 ## How-to Guide
