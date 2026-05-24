@@ -1,12 +1,12 @@
 # PetPass
 
-Live demo: https://petpass2026-frontend.onrender.com
+Check it out live: https://petpass2026-frontend.onrender.com
 
-PetPass is a full-stack web app for managing pet owners, pet passport details, and vaccination records.
+PetPass is a full-stack web app that my team and I built to make life easier for pet owners, helping them track passport details and vaccination records all in one place.
 
-This project started as a shared final project built by a team of four developers. This repository is my continued version of the project, where I keep improving the app while being clear that the original idea and first implementation were team work.
+The project started as a final capstone with three of my classmates during our one-year development bootcamp at HackYourFuture. We built the first version together, and in this repository I’m continuing to build out new features and use it as my personal full-stack sandbox.
 
-My contribution included both frontend and backend tasks. I worked across the stack because I enjoy understanding how the user interface, API, authentication, and database fit together as one product.
+Now I’m working on both the frontend and backend, and I really enjoy moving across the whole stack. I find it satisfying to see how the user interface, API, authentication, and database connect to form one working product.
 
 ## Features
 
