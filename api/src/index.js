@@ -9,6 +9,7 @@ import petsRouter from "./routers/petsRouter.js";
 import usersRouter from "./routers/usersRouter.js";
 import vaccinationsRouter from "./routers/vaccinationsRouter.js";
 import authRouter from "./routers/authRoutes.js";
+import { attachTokenUser } from "./middlewares/auth.js";
 
 import dotenv from "dotenv";
 
@@ -69,6 +70,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(attachTokenUser);
 
 const uploadsRoot = path.join(process.cwd(), "uploads");
 const petUploads = path.join(uploadsRoot, "pets");

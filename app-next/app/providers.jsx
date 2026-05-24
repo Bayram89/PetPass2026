@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { withApiBase } from "@/lib/api-base";
+import { setAuthToken, withAuthHeaders } from "@/lib/auth-token";
 
 const AuthContext = createContext({
   user: null,
@@ -19,6 +20,7 @@ export default function AuthProvider({ children }) {
       const res = await fetch(withApiBase("/api/me"), {
         credentials: "include",
         cache: "no-store",
+        headers: withAuthHeaders(),
       });
       if (!res.ok) throw new Error("not ok");
       const data = await res.json();
@@ -35,8 +37,10 @@ export default function AuthProvider({ children }) {
       await fetch(withApiBase("/auth/logout"), {
         method: "POST",
         credentials: "include",
+        headers: withAuthHeaders(),
       });
     } finally {
+      setAuthToken(null);
       setUser(null);
     }
   }

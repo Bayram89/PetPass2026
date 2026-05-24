@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import { withApiBase } from "@/lib/api-base";
+import { withAuthHeaders } from "@/lib/auth-token";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
@@ -46,7 +47,7 @@ export default function Navbar() {
     setMobileOpen(false);
 
     try {
-      await fetch(withApiBase("/auth/logout"), { method: "POST", credentials: "include" });
+      await fetch(withApiBase("/auth/logout"), { method: "POST", credentials: "include", headers: withAuthHeaders() });
     } catch {}
 
     await logout();

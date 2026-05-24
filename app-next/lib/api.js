@@ -1,4 +1,5 @@
 import { withApiBase } from "./api-base";
+import { withAuthHeaders } from "./auth-token";
 
 export default async function api(path, init = {}) {
   const res = await fetch(withApiBase(path), {
@@ -6,7 +7,7 @@ export default async function api(path, init = {}) {
     ...init,
     headers: {
       ...(init.method !== "GET" && { "Content-Type": "application/json" }),
-      ...(init.headers || {}),
+      ...withAuthHeaders(init.headers || {}),
     },
   });
 

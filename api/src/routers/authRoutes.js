@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import * as db from "../database/users.js";
+import { createAuthToken } from "../auth/token.js";
 
 const router = Router();
 
@@ -19,7 +20,10 @@ router.get("/auth/google/callback", passport.authenticate("google", { failureRed
 
     req.session.save((err) => {
       if (err) return next(err);
-      return res.redirect(`${redirectBase}/home`);
+      const token = createAuthToken(req.user);
+      const redirectUrl = new URL("/auth/callback", redirectBase);
+      redirectUrl.searchParams.set("token", token);
+      return res.redirect(redirectUrl.toString());
     });
   } catch (e) {
     return next(e);
