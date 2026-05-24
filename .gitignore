@@ -2,6 +2,9 @@
 *.min.css
 *.scss
 /AGENTS.md
+LOCAL_PROJECT_NOTES.md
+db/render_manual_import.sql
+db/petpass_dump.sql
 
 # dependencies
 node_modules/
