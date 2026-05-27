@@ -1,6 +1,6 @@
 # PetPass
 
-Check it out live: https://petpass2026-frontend.onrender.com
+Live demo: https://petpass2026-frontend.onrender.com
 
 PetPass is a full-stack web app that my team and I built to make life easier for pet owners, helping them track passport details and vaccination records all in one place.
 
