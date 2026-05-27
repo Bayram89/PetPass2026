@@ -25,6 +25,7 @@
   height: 148px;
   border-radius: 32px;
   object-fit: cover;
+  object-position: center 58%;
   border: 1px solid var(--line);
   box-shadow: var(--shadow-md);
 }
