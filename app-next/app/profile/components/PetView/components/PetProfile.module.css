@@ -27,6 +27,7 @@
   object-fit: cover;
   object-position: center 58%;
   border: 1px solid var(--line);
+  background: var(--surface-muted);
   box-shadow: var(--shadow-md);
 }
 
