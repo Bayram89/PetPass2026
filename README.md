@@ -26,7 +26,7 @@ I wanted this project to feel useful in a real-life situation where pet records 
 
 This demo account is public on purpose so recruiters can test the real admin side of the product without contacting me first.
 
-## For Recruiters
+## What to try
 
 - Create a new pet record
 - Add, edit, and delete vaccinations
@@ -39,18 +39,6 @@ This demo account is public on purpose so recruiters can test the real admin sid
 - It uses sample data only
 - Demo records may be refreshed to keep the account clean
 - Please do not store private personal information in it
-
-## Screenshots
-
-### Dashboard and records
-
-![PetPass dashboard preview](./app-next/public/images/record.webp)
-![PetPass medical record preview](./app-next/public/images/medical.webp)
-
-### Vaccination and travel context
-
-![PetPass vaccination preview](./app-next/public/images/vaccination.webp)
-![PetPass travel document preview](./app-next/public/images/travel.webp)
 
 ## Tech Stack
 
