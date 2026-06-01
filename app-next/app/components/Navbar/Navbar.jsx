@@ -201,7 +201,7 @@ export default function Navbar() {
                 <strong>{DEMO_ADMIN_PASSWORD}</strong>
               </div>
             </div>
-            <p className={styles.navbar__demoNote}>Public demo account. Uses sample data only.</p>
+            <p className={styles.navbar__demoNote}>Public demo account using sample data only. Records may be refreshed to keep the demo clean.</p>
             {demoError ? <p className={styles.navbar__demoError}>{demoError}</p> : null}
             <button type="button" className={styles.navbar__cancelButton} onClick={() => setShowLoginModal(false)}>
               Close

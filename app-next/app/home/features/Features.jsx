@@ -34,7 +34,7 @@ export default function Features() {
       <div className={`pageSection ${styles.features__shell}`}>
         <article className={`pageCard ${styles.features__manifesto}`}>
           <div className={styles.features__manifestoHeader}>
-            <span className="eyebrow">What to try</span>
+            <span className="eyebrow">For recruiters</span>
             <h2>Open the admin side and test the parts a regular visitor never gets to see.</h2>
           </div>
 

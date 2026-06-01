@@ -98,7 +98,7 @@ export default function Hero() {
                 </div>
               </div>
 
-              <small className={styles.hero__demoNote}>This is a public demo account with sample data only.</small>
+              <small className={styles.hero__demoNote}>This is a public demo account using sample data only. Records may be refreshed to keep the demo clean.</small>
               {demoError ? <p className={styles.hero__demoError}>{demoError}</p> : null}
             </div>
           )}

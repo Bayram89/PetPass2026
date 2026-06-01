@@ -7,6 +7,8 @@ PetPass is a full-stack web app that my team and I built to make life easier for
 
 The project started as a final capstone with three of my classmates during our one-year development bootcamp at HackYourFuture. We built the first version together, and in this repository I keep improving both the frontend and backend so it feels closer to a real product.
 
+I wanted this project to feel useful in a real-life situation where pet records need to be clear, fast to find, and easy to trust.
+
 ## Features
 
 - Google OAuth login
@@ -24,7 +26,7 @@ The project started as a final capstone with three of my classmates during our o
 
 This demo account is public on purpose so recruiters can test the real admin side of the product without contacting me first.
 
-## What To Try
+## For Recruiters
 
 - Create a new pet record
 - Add, edit, and delete vaccinations
@@ -35,7 +37,20 @@ This demo account is public on purpose so recruiters can test the real admin sid
 
 - The demo account is only for public testing
 - It uses sample data only
+- Demo records may be refreshed to keep the account clean
 - Please do not store private personal information in it
+
+## Screenshots
+
+### Dashboard and records
+
+![PetPass dashboard preview](./app-next/public/images/record.webp)
+![PetPass medical record preview](./app-next/public/images/medical.webp)
+
+### Vaccination and travel context
+
+![PetPass vaccination preview](./app-next/public/images/vaccination.webp)
+![PetPass travel document preview](./app-next/public/images/travel.webp)
 
 ## Tech Stack
 
