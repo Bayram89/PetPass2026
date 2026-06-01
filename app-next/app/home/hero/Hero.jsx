@@ -1,11 +1,13 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ShieldCheck, Stethoscope, PlaneTakeoff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import { withApiBase } from "@/lib/api-base";
+import { DEMO_ADMIN_EMAIL, DEMO_ADMIN_PASSWORD, signInAsDemoAdmin } from "@/lib/demo-access";
 import styles from "./Hero.module.css";
 
 const proofPoints = [
@@ -21,9 +23,11 @@ const trustItems = [
 ];
 
 export default function Hero() {
-  const { user, loading } = useAuth();
+  const { user, loading, refresh } = useAuth();
   const router = useRouter();
   const isAuthed = Boolean(user);
+  const [demoPending, setDemoPending] = React.useState(false);
+  const [demoError, setDemoError] = React.useState("");
 
   function handlePrimaryAction() {
     if (!isAuthed) {
@@ -33,6 +37,21 @@ export default function Hero() {
     }
 
     router.push("/profile/edit");
+  }
+
+  async function handleDemoLogin() {
+    setDemoPending(true);
+    setDemoError("");
+
+    try {
+      await signInAsDemoAdmin();
+      await refresh();
+      router.push("/profile/pets/all");
+    } catch (error) {
+      setDemoError(error?.message || "Demo admin login failed.");
+    } finally {
+      setDemoPending(false);
+    }
   }
 
   return (
@@ -52,10 +71,37 @@ export default function Hero() {
                 {isAuthed ? "Open my profile" : "Start with Google"}
               </button>
             )}
+            {!loading && !isAuthed && (
+              <button type="button" className="buttonSecondary" onClick={handleDemoLogin} disabled={demoPending}>
+                {demoPending ? "Opening demo admin..." : "Explore as demo admin"}
+              </button>
+            )}
             <Link href="/about" className="buttonSecondary">
               See how it works
             </Link>
           </div>
+
+          {!isAuthed && (
+            <div className={styles.hero__demoCard}>
+              <span className="eyebrow">Demo admin access</span>
+              <h2>See the real admin side without contacting me first.</h2>
+              <p>Use the public demo account to try pet creation, vaccine management, editing, deleting, and the admin dashboard.</p>
+
+              <div className={styles.hero__demoCredentials}>
+                <div className={styles.hero__demoCredential}>
+                  <span>Email</span>
+                  <strong>{DEMO_ADMIN_EMAIL}</strong>
+                </div>
+                <div className={styles.hero__demoCredential}>
+                  <span>Password</span>
+                  <strong>{DEMO_ADMIN_PASSWORD}</strong>
+                </div>
+              </div>
+
+              <small className={styles.hero__demoNote}>This is a public demo account with sample data only.</small>
+              {demoError ? <p className={styles.hero__demoError}>{demoError}</p> : null}
+            </div>
+          )}
 
           <div className={styles.hero__proof}>
             {proofPoints.map((item) => (

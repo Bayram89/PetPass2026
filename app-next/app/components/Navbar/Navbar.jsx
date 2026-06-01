@@ -8,16 +8,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers";
 import { withApiBase } from "@/lib/api-base";
 import { withAuthHeaders } from "@/lib/auth-token";
+import { DEMO_ADMIN_EMAIL, DEMO_ADMIN_PASSWORD, signInAsDemoAdmin } from "@/lib/demo-access";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, refresh } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const menuRef = useRef(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [demoPending, setDemoPending] = useState(false);
+  const [demoError, setDemoError] = useState("");
 
   const isAuthed = Boolean(user);
   const isAdmin = user?.role === "admin";
@@ -63,6 +66,22 @@ export default function Navbar() {
   function handleLoginRedirect() {
     localStorage.setItem("returnTo", pathname || "/home");
     window.location.href = withApiBase("/auth/google");
+  }
+
+  async function handleDemoLogin() {
+    setDemoPending(true);
+    setDemoError("");
+
+    try {
+      await signInAsDemoAdmin();
+      await refresh();
+      setShowLoginModal(false);
+      router.push("/profile/pets/all");
+    } catch (error) {
+      setDemoError(error?.message || "Demo admin login failed.");
+    } finally {
+      setDemoPending(false);
+    }
   }
 
   return (
@@ -163,12 +182,27 @@ export default function Navbar() {
         <div className={styles.navbar__modal} role="presentation" onClick={() => setShowLoginModal(false)}>
           <div className={styles.navbar__modalCard} role="dialog" aria-modal="true" aria-labelledby="login-title" onClick={(event) => event.stopPropagation()}>
             <span className="eyebrow">Secure access</span>
-            <h2 id="login-title">Continue with your Google account.</h2>
-            <p>We use Google sign-in so your pet records stay tied to one reliable identity.</p>
+            <h2 id="login-title">Use Google or jump straight into the demo admin view.</h2>
+            <p>If you are reviewing the project, the demo admin account is the fastest way to see pet creation, vaccine management, edits, deletes, and the admin dashboard.</p>
             <button type="button" className={styles.navbar__googleButton} onClick={handleLoginRedirect}>
               <Image src="/icons/google.svg" width={20} height={20} alt="Google logo" />
               Continue with Google
             </button>
+            <button type="button" className={styles.navbar__demoButton} onClick={handleDemoLogin} disabled={demoPending}>
+              {demoPending ? "Opening demo admin..." : "Explore as demo admin"}
+            </button>
+            <div className={styles.navbar__demoCredentials}>
+              <div className={styles.navbar__demoCredential}>
+                <span>Email</span>
+                <strong>{DEMO_ADMIN_EMAIL}</strong>
+              </div>
+              <div className={styles.navbar__demoCredential}>
+                <span>Password</span>
+                <strong>{DEMO_ADMIN_PASSWORD}</strong>
+              </div>
+            </div>
+            <p className={styles.navbar__demoNote}>Public demo account. Uses sample data only.</p>
+            {demoError ? <p className={styles.navbar__demoError}>{demoError}</p> : null}
             <button type="button" className={styles.navbar__cancelButton} onClick={() => setShowLoginModal(false)}>
               Close
             </button>

@@ -6,9 +6,9 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import styles from "./Features.module.css";
 
 const operatingModel = [
-  "Create the owner profile once, then keep pet records connected to it.",
-  "Add vaccines, medical notes, and passport fields as events instead of random text blocks.",
-  "Open a single profile view when you need to show proof quickly.",
+  "Create or edit a pet record to see the owner, passport, and identity details in one place.",
+  "Add, update, or delete vaccinations to test the admin-only medical workflow.",
+  "Open the all-pets and all-users views to see the dashboard side recruiters usually miss.",
 ];
 
 const valueCards = [
@@ -34,8 +34,8 @@ export default function Features() {
       <div className={`pageSection ${styles.features__shell}`}>
         <article className={`pageCard ${styles.features__manifesto}`}>
           <div className={styles.features__manifestoHeader}>
-            <span className="eyebrow">A calmer operating model</span>
-            <h2>One product, three simple habits, much less document chaos.</h2>
+            <span className="eyebrow">What to try</span>
+            <h2>Open the admin side and test the parts a regular visitor never gets to see.</h2>
           </div>
 
           <div className={styles.features__steps}>
@@ -61,11 +61,11 @@ export default function Features() {
           ))}
 
           <article className={styles.features__ctaPanel}>
-            <span className="eyebrow">Frontend refresh</span>
-            <h3>Cleaner paths, cleaner files, cleaner first impression.</h3>
-            <p>The public frontend now shares one visual language, and JSX-rendering files use the `.jsx` extension consistently.</p>
-            <Link href="/contact" className="buttonPrimary">
-              Contact the team
+            <span className="eyebrow">Public demo</span>
+            <h3>Everything here uses demo data, so it is safe to explore.</h3>
+            <p>The demo admin account is public on purpose. It exists so recruiters can test the real admin tools without asking for access first.</p>
+            <Link href="/faq" className="buttonPrimary">
+              See common questions
             </Link>
           </article>
         </div>
