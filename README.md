@@ -28,7 +28,7 @@ This demo account is public on purpose so recruiters can test the real admin sid
 
 ## What to try
 
-- Create a new pet record
+- Create a new pet
 - Add, edit, and delete vaccinations
 - Update pet details and owner details
 - Open the all-pets and all-users admin views
