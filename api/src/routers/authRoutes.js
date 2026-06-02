@@ -50,204 +50,381 @@ function createSessionUser(user) {
 }
 
 async function ensureDemoDataset(demoAdminUser) {
-  const existingDemoUsers = await dbClient("users").whereILike("email", "%@petpass-demo.local").select("id");
-  if (existingDemoUsers.length > 0) return;
-
   await dbClient.transaction(async (trx) => {
-    const owners = await trx("users")
-      .insert([
-        {
-          full_name: "Sofia Lindholm",
-          email: "sofia.lindholm@petpass-demo.local",
-          phone: "+45 28 40 11 22",
-          address: "Frederiksberg, Copenhagen",
-          date_of_birth: "1992-03-16",
-          passport_number: "DPAUSR001",
-          admin: false,
-        },
-        {
-          full_name: "Mateo Ortega",
-          email: "mateo.ortega@petpass-demo.local",
-          phone: "+34 611 28 44 90",
-          address: "Valencia, Spain",
-          date_of_birth: "1988-09-04",
-          passport_number: "DPAUSR002",
-          admin: false,
-        },
-        {
-          full_name: "Priya Nair",
-          email: "priya.nair@petpass-demo.local",
-          phone: "+45 31 74 92 18",
-          address: "Norrebro, Copenhagen",
-          date_of_birth: "1990-12-11",
-          passport_number: "DPAUSR003",
-          admin: false,
-        },
-      ])
-      .returning(["id", "email"]);
+    const ownerSeeds = [
+      {
+        full_name: "Bayram Erdem",
+        email: "bayram9erdem@gmail.com",
+        phone: "4561767312",
+        address: "Copenhagen, Denmark",
+        date_of_birth: "1996-01-01",
+        passport_number: "D33USR000",
+        admin: false,
+      },
+      {
+        full_name: "Freja Mikkelsen",
+        email: "freja.mikkelsen@petpass-demo.local",
+        phone: "+45 31 11 00 07",
+        address: "Aarhus, Denmark",
+        date_of_birth: "1996-05-22",
+        passport_number: "D33USR031",
+        admin: false,
+      },
+      {
+        full_name: "Ingrid Solheim",
+        email: "ingrid.solheim@petpass-demo.local",
+        phone: "+47 412 11 005",
+        address: "Bergen, Norway",
+        date_of_birth: "1988-11-16",
+        passport_number: "D33USR005",
+        admin: false,
+      },
+      {
+        full_name: "Giulia Romano",
+        email: "giulia.romano@petpass-demo.local",
+        phone: "+39 331 110 0004",
+        address: "Bologna, Italy",
+        date_of_birth: "1986-07-09",
+        passport_number: "D33USR028",
+        admin: false,
+      },
+      {
+        full_name: "Javier Navarro",
+        email: "javier.navarro@petpass-demo.local",
+        phone: "+34 611 100 006",
+        address: "Valencia, Spain",
+        date_of_birth: "1990-03-03",
+        passport_number: "D33USR022",
+        admin: false,
+      },
+      {
+        full_name: "Aiko Tanaka",
+        email: "aiko.tanaka@petpass-demo.local",
+        phone: "+81 90 1100 0003",
+        address: "Yokohama, Japan",
+        date_of_birth: "1993-01-27",
+        passport_number: "D33USR019",
+        admin: false,
+      },
+      {
+        full_name: "Aino Korhonen",
+        email: "aino.korhonen@petpass-demo.local",
+        phone: "+358 44 110 0008",
+        address: "Turku, Finland",
+        date_of_birth: "1989-12-14",
+        passport_number: "D33USR032",
+        admin: false,
+      },
+      {
+        full_name: "Siobhan O'Sullivan",
+        email: "siobhan.osullivan@petpass-demo.local",
+        phone: "+353 85 110 0001",
+        address: "Dublin, Ireland",
+        date_of_birth: "1991-10-05",
+        passport_number: "D33USR025",
+        admin: false,
+      },
+    ];
+
+    for (const owner of ownerSeeds) {
+      const existingOwner = await trx("users").where({ email: owner.email }).first("id");
+      if (!existingOwner) {
+        await trx("users").insert(owner);
+      }
+    }
+
+    const owners = await trx("users").whereIn(
+      "email",
+      ownerSeeds.map((owner) => owner.email),
+    ).select(["id", "email"]);
 
     const ownerMap = new Map(owners.map((owner) => [owner.email, owner.id]));
     ownerMap.set(demoAdminUser.email, demoAdminUser.id);
 
-    const pets = await trx("pets")
-      .insert([
-        {
-          owner_user_id: demoAdminUser.id,
-          name: "Atlas",
-          species: "Dog",
-          breed: "Labrador Retriever",
-          sex: "Male",
-          color_markings: "Golden coat with white chest patch",
-          date_of_birth: "2021-02-18",
-          country_of_birth: "DK",
-          microchip_number: "945000000001001",
-          passport_number: "DPA-PET001",
-          country_of_issue: "DK",
-          issue_date: "2025-01-14",
-          issuing_authority: "Copenhagen Animal Health",
-          current_status: "Active",
-          photo_url: "/images/nora.png",
-        },
-        {
-          owner_user_id: demoAdminUser.id,
-          name: "Miso",
-          species: "Cat",
-          breed: "British Shorthair",
-          sex: "Female",
-          color_markings: "Blue-grey coat and copper eyes",
-          date_of_birth: "2020-07-09",
-          country_of_birth: "SE",
-          microchip_number: "945000000001002",
-          passport_number: "DPA-PET002",
-          country_of_issue: "SE",
-          issue_date: "2025-02-03",
-          issuing_authority: "Nordic Vet Group",
-          current_status: "Active",
-          photo_url: "/images/record.webp",
-        },
-        {
-          owner_user_id: ownerMap.get("sofia.lindholm@petpass-demo.local"),
-          name: "Pico",
-          species: "Rabbit",
-          breed: "Mini Lop",
-          sex: "Male",
-          color_markings: "White paws and caramel ears",
-          date_of_birth: "2023-04-14",
-          country_of_birth: "DK",
-          microchip_number: "945000000001003",
-          passport_number: "DPA-PET003",
-          country_of_issue: "DK",
-          issue_date: "2025-03-12",
-          issuing_authority: "Garden Pet Practice",
-          current_status: "Needs vaccine review",
-          photo_url: "/images/petcare.webp",
-        },
-        {
-          owner_user_id: ownerMap.get("mateo.ortega@petpass-demo.local"),
-          name: "Saffron",
-          species: "Parrot",
-          breed: "African Grey",
-          sex: "Female",
-          color_markings: "Silver wings and red tail feathers",
-          date_of_birth: "2019-05-27",
-          country_of_birth: "ES",
-          microchip_number: "945000000001004",
-          passport_number: "DPA-PET004",
-          country_of_issue: "ES",
-          issue_date: "2025-04-01",
-          issuing_authority: "Coastal Exotics Clinic",
-          current_status: "Travel documents under review",
-          photo_url: "/images/travel.webp",
-        },
-        {
-          owner_user_id: ownerMap.get("priya.nair@petpass-demo.local"),
-          name: "Nori",
-          species: "Dog",
-          breed: "Shiba Inu",
-          sex: "Female",
-          color_markings: "Sesame coat and white socks",
-          date_of_birth: "2022-01-08",
-          country_of_birth: "JP",
-          microchip_number: "945000000001005",
-          passport_number: "DPA-PET005",
-          country_of_issue: "JP",
-          issue_date: "2025-05-06",
-          issuing_authority: "City Vet House",
-          current_status: "Active",
-          photo_url: "/images/identification.webp",
-        },
-        {
-          owner_user_id: ownerMap.get("priya.nair@petpass-demo.local"),
-          name: "Juniper",
-          species: "Ferret",
-          breed: "Standard Ferret",
-          sex: "Male",
-          color_markings: "Masked face and cream belly",
-          date_of_birth: "2021-11-30",
-          country_of_birth: "NL",
-          microchip_number: "945000000001006",
-          passport_number: "DPA-PET006",
-          country_of_issue: "NL",
-          issue_date: "2025-05-10",
-          issuing_authority: "Canal Vet Center",
-          current_status: "Follow-up needed",
-          photo_url: "/images/vaccination.webp",
-        },
-      ])
-      .returning(["id", "name"]);
+    const petSeeds = [
+      {
+        owner_user_id: ownerMap.get("bayram9erdem@gmail.com"),
+        name: "Nora",
+        species: "Dog",
+        breed: "Collie & Australian Shepherd mix",
+        sex: "Female",
+        color_markings: "Tri-color coat with white blaze",
+        date_of_birth: "2025-09-01",
+        country_of_birth: "DK",
+        microchip_number: "900164784001455",
+        passport_number: "PP000001",
+        country_of_issue: "DK",
+        issue_date: "2026-01-14",
+        issuing_authority: "Copenhagen Animal Health",
+        current_status: "Booster due soon",
+        photo_url: "/images/nora.png",
+      },
+      {
+        owner_user_id: ownerMap.get("giulia.romano@petpass-demo.local"),
+        name: "Stella",
+        species: "Dog",
+        breed: "Keeshond",
+        sex: "Female",
+        color_markings: "Black saddle coat",
+        date_of_birth: "2018-01-05",
+        country_of_birth: "IT",
+        microchip_number: "D33MC012",
+        passport_number: "D33-PP012",
+        country_of_issue: "IT",
+        issue_date: "2025-03-26",
+        issuing_authority: "North Shore Vets",
+        current_status: "Active",
+        photo_url: "/images/record.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("javier.navarro@petpass-demo.local"),
+        name: "Rio",
+        species: "Dog",
+        breed: "Lagotto Romagnolo",
+        sex: "Male",
+        color_markings: "Curly cream coat",
+        date_of_birth: "2021-01-18",
+        country_of_birth: "ES",
+        microchip_number: "D33MC022",
+        passport_number: "D33-PP022",
+        country_of_issue: "ES",
+        issue_date: "2025-04-22",
+        issuing_authority: "Old Town Vet House",
+        current_status: "Rabies expired",
+        photo_url: "/images/medical.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("aiko.tanaka@petpass-demo.local"),
+        name: "Yuki",
+        species: "Ferret",
+        breed: "Standard Ferret",
+        sex: "Male",
+        color_markings: "Mask face",
+        date_of_birth: "2022-09-13",
+        country_of_birth: "JP",
+        microchip_number: "D33MC011",
+        passport_number: "D33-PP011",
+        country_of_issue: "JP",
+        issue_date: "2025-03-22",
+        issuing_authority: "City Aviary Care",
+        current_status: "Booster due soon",
+        photo_url: "/images/vaccination.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("aiko.tanaka@petpass-demo.local"),
+        name: "Sora",
+        species: "Parrot",
+        breed: "Caique",
+        sex: "Male",
+        color_markings: "Green wing feathers",
+        date_of_birth: "2021-06-19",
+        country_of_birth: "JP",
+        microchip_number: "D33MC003",
+        passport_number: "D33-PP003",
+        country_of_issue: "JP",
+        issue_date: "2025-02-18",
+        issuing_authority: "City Aviary Care",
+        current_status: "Travel certificate on file",
+        photo_url: "/images/travel.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("siobhan.osullivan@petpass-demo.local"),
+        name: "Roisin",
+        species: "Chicken",
+        breed: "Silkie",
+        sex: "Female",
+        color_markings: "Soft white feathers with charcoal crest",
+        date_of_birth: "2024-03-05",
+        country_of_birth: "IE",
+        microchip_number: "D33MC025",
+        passport_number: "D33-PP025",
+        country_of_issue: "IE",
+        issue_date: "2025-08-14",
+        issuing_authority: "Garden Pet Practice",
+        current_status: "Inspection completed",
+        photo_url: "/images/petcare.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("freja.mikkelsen@petpass-demo.local"),
+        name: "Alma",
+        species: "Rabbit",
+        breed: "Mini Rex",
+        sex: "Female",
+        color_markings: "Velvet chocolate ears",
+        date_of_birth: "2023-05-12",
+        country_of_birth: "DK",
+        microchip_number: "D33MC031",
+        passport_number: "D33-PP031",
+        country_of_issue: "DK",
+        issue_date: "2025-05-08",
+        issuing_authority: "Garden Pet Practice",
+        current_status: "Active",
+        photo_url: "/images/petcare.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("freja.mikkelsen@petpass-demo.local"),
+        name: "Otto",
+        species: "Cat",
+        breed: "Burmilla",
+        sex: "Female",
+        color_markings: "Silver tipped coat",
+        date_of_birth: "2023-02-09",
+        country_of_birth: "DK",
+        microchip_number: "D33MC023",
+        passport_number: "D33-PP023",
+        country_of_issue: "DK",
+        issue_date: "2025-02-17",
+        issuing_authority: "Harbor Cat Clinic",
+        current_status: "Active",
+        photo_url: "/images/record.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("giulia.romano@petpass-demo.local"),
+        name: "Pepe",
+        species: "Dog",
+        breed: "Belgian Laekenois",
+        sex: "Male",
+        color_markings: "Rough fawn coat",
+        date_of_birth: "2020-11-01",
+        country_of_birth: "IT",
+        microchip_number: "D33MC020",
+        passport_number: "D33-PP020",
+        country_of_issue: "IT",
+        issue_date: "2025-05-02",
+        issuing_authority: "North Shore Vets",
+        current_status: "Active",
+        photo_url: "/images/identification.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("ingrid.solheim@petpass-demo.local"),
+        name: "Bamse",
+        species: "Dog",
+        breed: "Nova Scotia Duck Tolling Retriever",
+        sex: "Male",
+        color_markings: "Copper coat and white tail tip",
+        date_of_birth: "2022-03-09",
+        country_of_birth: "NO",
+        microchip_number: "D33MC005",
+        passport_number: "D33-PP005",
+        country_of_issue: "NO",
+        issue_date: "2025-03-09",
+        issuing_authority: "Nordic Fjord Vet",
+        current_status: "Active",
+        photo_url: "/images/nora.png",
+      },
+      {
+        owner_user_id: ownerMap.get("aiko.tanaka@petpass-demo.local"),
+        name: "Kiko",
+        species: "Cat",
+        breed: "LaPerm",
+        sex: "Female",
+        color_markings: "Soft curled cream coat",
+        date_of_birth: "2022-07-07",
+        country_of_birth: "JP",
+        microchip_number: "D33MC027",
+        passport_number: "D33-PP027",
+        country_of_issue: "JP",
+        issue_date: "2025-06-01",
+        issuing_authority: "Yokohama Pet Clinic",
+        current_status: "Active",
+        photo_url: "/images/record.webp",
+      },
+      {
+        owner_user_id: ownerMap.get("aino.korhonen@petpass-demo.local"),
+        name: "Nuppu",
+        species: "Dog",
+        breed: "Spanish Water Dog",
+        sex: "Male",
+        color_markings: "Dark curly coat",
+        date_of_birth: "2020-01-25",
+        country_of_birth: "FI",
+        microchip_number: "D33MC032",
+        passport_number: "D33-PP032",
+        country_of_issue: "FI",
+        issue_date: "2025-04-10",
+        issuing_authority: "Turku Animal Health",
+        current_status: "Active",
+        photo_url: "/images/identification.webp",
+      },
+    ];
+
+    const desiredPassports = petSeeds.map((pet) => pet.passport_number);
+    const removablePets = await trx("pets as p")
+      .leftJoin("users as u", "u.id", "p.owner_user_id")
+      .where((query) => {
+        query
+          .whereLike("p.passport_number", "DPA-PET%")
+          .orWhere((nested) => {
+            nested.whereLike("u.email", "%@petpass-demo.local").whereNotIn("p.passport_number", desiredPassports);
+          })
+          .orWhere((nested) => {
+            nested.where("u.email", "bayram9erdem@gmail.com").whereNotIn("p.passport_number", desiredPassports);
+          });
+      })
+      .select(["p.id"]);
+
+    if (removablePets.length > 0) {
+      const removablePetIds = removablePets.map((pet) => pet.id);
+      await trx("vaccinations").whereIn("pet_id", removablePetIds).del();
+      await trx("pets").whereIn("id", removablePetIds).del();
+    }
+
+    for (const pet of petSeeds) {
+      const existingPet = await trx("pets").where({ passport_number: pet.passport_number }).first("id");
+      if (!existingPet) {
+        await trx("pets").insert(pet);
+      }
+    }
+
+    const pets = await trx("pets").whereIn(
+      "passport_number",
+      desiredPassports,
+    ).select(["id", "name"]);
 
     const petMap = new Map(pets.map((pet) => [pet.name, pet.id]));
 
-    await trx("vaccinations").insert([
-      {
-        pet_id: petMap.get("Atlas"),
-        vaccine_name: "Rabies",
-        date_administered: "2025-02-14",
-        next_due: "2026-02-14",
-        veterinarian: "Copenhagen Animal Health",
-        notes: "Travel-ready vaccination with certificate attached in clinic records.",
-      },
-      {
-        pet_id: petMap.get("Atlas"),
-        vaccine_name: "DHPPi",
-        date_administered: "2025-02-14",
-        next_due: "2026-02-14",
-        veterinarian: "Copenhagen Animal Health",
-        notes: "Primary annual combination shot complete.",
-      },
-      {
-        pet_id: petMap.get("Miso"),
-        vaccine_name: "Rabies",
-        date_administered: "2025-06-01",
-        next_due: "2025-06-28",
-        veterinarian: "Nordic Vet Group",
-        notes: "Edge case demo: next dose is due soon so reviewers can spot an upcoming deadline quickly.",
-      },
-      {
-        pet_id: petMap.get("Saffron"),
-        vaccine_name: "Psittacosis",
-        date_administered: "2025-03-18",
-        next_due: "2026-03-18",
-        veterinarian: "Coastal Exotics Clinic",
-        notes: "Recorded for cross-border movement review.",
-      },
-      {
-        pet_id: petMap.get("Nori"),
-        vaccine_name: "Rabies",
-        date_administered: "2025-05-11",
-        next_due: "2026-05-11",
-        veterinarian: "City Vet House",
-        notes: "Recent dose added so the edit flow has a fresh record to work with.",
-      },
-      {
-        pet_id: petMap.get("Juniper"),
-        vaccine_name: "Canine Distemper",
-        date_administered: "2024-12-02",
-        next_due: "2025-04-02",
-        veterinarian: "Canal Vet Center",
-        notes: "Edge case demo: follow-up is overdue and should stand out in the record list.",
-      },
-    ]);
+    await trx("vaccinations").whereIn("pet_id", Array.from(petMap.values())).del();
+
+    const vaccinationSeeds = [
+      { pet_name: "Nora", vaccine_name: "Rabies", date_administered: "2025-11-15", next_due: "2026-11-15", veterinarian: "Copenhagen Animal Health", notes: null },
+      { pet_name: "Nora", vaccine_name: "DHPP", date_administered: "2025-11-15", next_due: "2026-11-15", veterinarian: "Copenhagen Animal Health", notes: null },
+      { pet_name: "Nora", vaccine_name: "Bordetella", date_administered: "2026-02-01", next_due: "2026-07-01", veterinarian: "Copenhagen Animal Health", notes: null },
+      { pet_name: "Stella", vaccine_name: "Rabies", date_administered: "2020-03-10", next_due: "2021-03-10", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Stella", vaccine_name: "Rabies", date_administered: "2021-03-12", next_due: "2022-03-12", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Stella", vaccine_name: "Rabies", date_administered: "2022-03-15", next_due: "2023-03-15", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Stella", vaccine_name: "Rabies", date_administered: "2023-03-18", next_due: "2024-03-18", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Stella", vaccine_name: "Rabies", date_administered: "2024-03-10", next_due: "2025-03-10", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Stella", vaccine_name: "Rabies", date_administered: "2025-03-22", next_due: "2026-03-22", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Stella", vaccine_name: "Senior wellness check", date_administered: "2025-10-05", next_due: "2026-10-05", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Rio", vaccine_name: "Rabies", date_administered: "2022-04-12", next_due: "2023-04-12", veterinarian: "Old Town Vet House", notes: null },
+      { pet_name: "Yuki", vaccine_name: "Canine Distemper", date_administered: "2025-06-20", next_due: "2026-06-20", veterinarian: "City Aviary Care", notes: null },
+      { pet_name: "Yuki", vaccine_name: "Rabies", date_administered: "2025-06-20", next_due: "2026-12-20", veterinarian: "City Aviary Care", notes: null },
+      { pet_name: "Sora", vaccine_name: "Psittacosis", date_administered: "2026-04-10", next_due: "2027-04-10", veterinarian: "City Aviary Care", notes: null },
+      { pet_name: "Sora", vaccine_name: "Travel health certificate", date_administered: "2026-05-02", next_due: "2027-05-02", veterinarian: "City Aviary Care", notes: null },
+      { pet_name: "Roisin", vaccine_name: "Newcastle Disease", date_administered: "2026-01-09", next_due: "2027-01-09", veterinarian: "Garden Pet Practice", notes: null },
+      { pet_name: "Roisin", vaccine_name: "Annual inspection", date_administered: "2026-01-09", next_due: "2027-01-09", veterinarian: "Garden Pet Practice", notes: null },
+      { pet_name: "Alma", vaccine_name: "Myxomatosis", date_administered: "2025-09-15", next_due: "2026-09-15", veterinarian: "Garden Pet Practice", notes: null },
+      { pet_name: "Alma", vaccine_name: "RHDV2", date_administered: "2026-03-10", next_due: "2027-03-10", veterinarian: "Garden Pet Practice", notes: null },
+      { pet_name: "Otto", vaccine_name: "Rabies", date_administered: "2026-02-09", next_due: "2027-02-09", veterinarian: "Harbor Cat Clinic", notes: null },
+      { pet_name: "Pepe", vaccine_name: "Rabies", date_administered: "2026-01-15", next_due: "2027-01-15", veterinarian: "North Shore Vets", notes: null },
+      { pet_name: "Bamse", vaccine_name: "Rabies", date_administered: "2026-03-09", next_due: "2027-03-09", veterinarian: "Nordic Fjord Vet", notes: null },
+      { pet_name: "Kiko", vaccine_name: "Rabies", date_administered: "2026-04-07", next_due: "2027-04-07", veterinarian: "Yokohama Pet Clinic", notes: null },
+      { pet_name: "Nuppu", vaccine_name: "Rabies", date_administered: "2026-01-25", next_due: "2027-01-25", veterinarian: "Turku Animal Health", notes: null },
+    ];
+
+    for (const vaccination of vaccinationSeeds) {
+      const petId = petMap.get(vaccination.pet_name);
+      if (!petId) continue;
+
+      await trx("vaccinations").insert({
+        pet_id: petId,
+        vaccine_name: vaccination.vaccine_name,
+        date_administered: vaccination.date_administered,
+        next_due: vaccination.next_due,
+        veterinarian: vaccination.veterinarian,
+        notes: vaccination.notes,
+      });
+    }
   });
 }
 
