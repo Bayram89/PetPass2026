@@ -20,7 +20,7 @@ async function ensureDemoAdminUser() {
     await db.addUser({
       full_name: "PetPass Demo Admin",
       email: DEMO_ADMIN_EMAIL,
-      phone: "+45 00 00 00 00",
+      phone: "+45 31 45 67 89",
       address: "Sample demo data only",
       date_of_birth: "1990-01-01",
       passport_number: "DEMOADMIN001",
