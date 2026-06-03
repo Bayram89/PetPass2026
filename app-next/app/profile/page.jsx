@@ -44,6 +44,7 @@ export default function ProfilePage() {
   const [index, setIndex] = useState(0);
   const carouselRef = useRef(null);
   const isAuthed = Boolean(authUser);
+  const isDemoAccount = user?.address === "Sample demo data only";
 
   function goTo(nextIndex) {
     const safeIndex = (nextIndex + count) % count;
@@ -332,7 +333,7 @@ export default function ProfilePage() {
                 <p>Keep your own details in order, then move between pet records without losing context.</p>
                 <div className={styles.profile__meta}>
                   <span>{user?.email || authUser?.email}</span>
-                  <span>{user?.address || "Address missing"}</span>
+                  <span>{isDemoAccount ? "Demo Account" : user?.address || "Address missing"}</span>
                 </div>
               </div>
             </div>
