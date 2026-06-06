@@ -37,6 +37,14 @@
 
 textarea.vaccination__field {
   resize: vertical;
+  min-height: 88px;
+}
+
+.vaccination__actions {
+  position: sticky;
+  bottom: 0;
+  padding-top: 8px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--card) 28px);
 }
 
 .vaccination__button {

@@ -167,7 +167,7 @@ export default function VaccinationForm({ petId, onCreated }) {
             name="notes"
             value={form.notes}
             onChange={onChange}
-            rows={3}
+            rows={2}
             className={styles.vaccination__field}
           />
         </div>
@@ -175,6 +175,7 @@ export default function VaccinationForm({ petId, onCreated }) {
         {err && <p className={styles.vaccination__error}>{err}</p>}
         {ok && <p className={styles.vaccination__ok}>{ok}</p>}
 
+        <div className={styles.vaccination__actions}>
         <button
           type="button"
           className={styles.vaccination__button}
@@ -183,6 +184,7 @@ export default function VaccinationForm({ petId, onCreated }) {
         >
           {loading ? "Saving…" : "Save"}
         </button>
+        </div>
       </div>
     </section>
   );
