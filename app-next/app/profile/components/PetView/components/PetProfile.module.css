@@ -156,6 +156,8 @@
 
 .modal__content {
   width: min(920px, 100%);
+  display: flex;
+  flex-direction: column;
   max-height: 88vh;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -182,9 +184,10 @@
 }
 
 .modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   padding: 16px 18px;
-  max-height: calc(88vh - 132px);
 }
 
 .modal__title {
