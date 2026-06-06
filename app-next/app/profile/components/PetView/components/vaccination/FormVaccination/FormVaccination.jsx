@@ -147,18 +147,18 @@ export default function VaccinationForm({ petId, onCreated }) {
               className={styles.vaccination__field}
             />
           </div>
-        </div>
 
-        <div className={styles.vaccination__row}>
-          <label htmlFor="notes">Notes</label>
-          <textarea
-            id="notes"
-            name="notes"
-            value={form.notes}
-            onChange={onChange}
-            rows={2}
-            className={styles.vaccination__field}
-          />
+          <div className={styles.vaccination__row}>
+            <label htmlFor="notes">Notes</label>
+            <textarea
+              id="notes"
+              name="notes"
+              value={form.notes}
+              onChange={onChange}
+              rows={2}
+              className={styles.vaccination__field}
+            />
+          </div>
         </div>
 
         {err && <p className={styles.vaccination__error}>{err}</p>}
