@@ -1,8 +1,8 @@
 .vaccination {
-  padding: 32px 20px;
+  padding: 12px 0;
   max-width: 900px;
   margin: 0 auto;
-  min-height: 65vh;
+  min-height: auto;
 }
 
 .vaccination__error {
