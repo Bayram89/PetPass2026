@@ -143,21 +143,38 @@ async function ensureDemoDataset(demoAdminUser) {
 
     const petSeeds = [
       {
-        owner_user_id: ownerMap.get("bayram9erdem@gmail.com"),
+        owner_user_id: demoAdminUser.id,
         name: "Nora",
         species: "Dog",
         breed: "Collie & Australian Shepherd mix",
         sex: "Female",
-        color_markings: "Tri-color coat with white blaze",
+        color_markings: "Tricolor (black, white and tan)",
         date_of_birth: "2025-09-01",
         country_of_birth: "DK",
         microchip_number: "900164784001455",
         passport_number: "PP000001",
         country_of_issue: "DK",
-        issue_date: "2026-01-14",
-        issuing_authority: "Copenhagen Animal Health",
-        current_status: "Booster due soon",
+        issue_date: "2026-05-09",
+        issuing_authority: null,
+        current_status: "Active",
         photo_url: "/images/nora.png",
+      },
+      {
+        owner_user_id: demoAdminUser.id,
+        name: "Test pet",
+        species: "Cat",
+        breed: "Golden",
+        sex: "Male",
+        color_markings: null,
+        date_of_birth: "2026-06-02",
+        country_of_birth: "DK",
+        microchip_number: "213123123",
+        passport_number: null,
+        country_of_issue: "DK",
+        issue_date: "2026-06-02",
+        issuing_authority: null,
+        current_status: "Active",
+        photo_url: null,
       },
       {
         owner_user_id: ownerMap.get("giulia.romano@petpass-demo.local"),
@@ -348,17 +365,18 @@ async function ensureDemoDataset(demoAdminUser) {
       },
     ];
 
-    const desiredPassports = petSeeds.map((pet) => pet.passport_number);
+    const desiredPassports = petSeeds.map((pet) => pet.passport_number).filter(Boolean);
+    const desiredMicrochips = petSeeds.map((pet) => pet.microchip_number).filter(Boolean);
     const removablePets = await trx("pets as p")
       .leftJoin("users as u", "u.id", "p.owner_user_id")
       .where((query) => {
         query
           .whereLike("p.passport_number", "DPA-PET%")
           .orWhere((nested) => {
-            nested.whereLike("u.email", "%@petpass-demo.local").whereNotIn("p.passport_number", desiredPassports);
+            nested.whereLike("u.email", "%@petpass-demo.local").whereNotIn("p.passport_number", desiredPassports).whereNotIn("p.microchip_number", desiredMicrochips);
           })
           .orWhere((nested) => {
-            nested.where("u.email", "bayram9erdem@gmail.com").whereNotIn("p.passport_number", desiredPassports);
+            nested.where("u.email", "bayram9erdem@gmail.com").whereNotIn("p.passport_number", desiredPassports).whereNotIn("p.microchip_number", desiredMicrochips);
           });
       })
       .select(["p.id"]);
@@ -370,16 +388,24 @@ async function ensureDemoDataset(demoAdminUser) {
     }
 
     for (const pet of petSeeds) {
-      const existingPet = await trx("pets").where({ passport_number: pet.passport_number }).first("id");
+      const existingPet = await trx("pets")
+        .where((query) => {
+          if (pet.passport_number) query.orWhere({ passport_number: pet.passport_number });
+          if (pet.microchip_number) query.orWhere({ microchip_number: pet.microchip_number });
+        })
+        .first("id");
       if (!existingPet) {
         await trx("pets").insert(pet);
+      } else {
+        await trx("pets").where({ id: existingPet.id }).update(pet);
       }
     }
 
-    const pets = await trx("pets").whereIn(
-      "passport_number",
-      desiredPassports,
-    ).select(["id", "name"]);
+    const pets = await trx("pets")
+      .where((query) => {
+        query.whereIn("passport_number", desiredPassports).orWhereIn("microchip_number", desiredMicrochips);
+      })
+      .select(["id", "name"]);
 
     const petMap = new Map(pets.map((pet) => [pet.name, pet.id]));
 
