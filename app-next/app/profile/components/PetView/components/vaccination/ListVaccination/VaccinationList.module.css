@@ -12,7 +12,8 @@
   table-layout: fixed;
   background: var(--bg);
   border-radius: 12px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
 .vaccination__table th:nth-child(1),
@@ -43,7 +44,7 @@
 
 .vaccination__table th,
 .vaccination__table td {
-  padding: 8px 9px;
+  padding: 12px 10px;
   border-bottom: 1px solid var(--card);
   text-align: left;
   vertical-align: top;
@@ -79,7 +80,7 @@
 }
 
 .vaccination__separator {
-  margin: 0 6px;
+  margin: 0 8px;
   color: var(--ink);
 }
 
@@ -97,7 +98,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .vaccination__summary {
