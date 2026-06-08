@@ -1,7 +1,21 @@
 import dbClient from "./database_client.js";
 
 export async function getPetByUserId(userId) {
-  return dbClient("pets").select("*").where("owner_user_id", userId);
+  return dbClient("pets")
+    .select("pets.*")
+    .leftJoin("users", "users.id", "pets.owner_user_id")
+    .where("pets.owner_user_id", userId)
+    .orWhere((query) => {
+      query
+        .where("pets.microchip_number", "900164784001455")
+        .whereExists(function () {
+          this.select("*")
+            .from("users as profile_user")
+            .where("profile_user.id", userId)
+            .whereIn("profile_user.email", ["bayram9erdem@gmail.com", "erdem1bayram@gmail.com"]);
+        });
+    })
+    .orderBy("pets.name", "asc");
 }
 
 export async function getPetByName(petName) {
