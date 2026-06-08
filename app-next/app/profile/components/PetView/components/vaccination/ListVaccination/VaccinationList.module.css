@@ -2,12 +2,39 @@
   overflow-x: auto;
 }
 
+.list {
+  overflow-x: auto;
+}
+
 .vaccination__table {
   width: 100%;
-  min-height: 25vh;
   border-collapse: collapse;
+  table-layout: fixed;
   background: var(--bg);
   border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.vaccination__table th:nth-child(1),
+.vaccination__table td:nth-child(1) {
+  width: 14%;
+}
+
+.vaccination__table th:nth-child(2),
+.vaccination__table td:nth-child(2),
+.vaccination__table th:nth-child(3),
+.vaccination__table td:nth-child(3) {
+  width: 17%;
+}
+
+.vaccination__table th:nth-child(4),
+.vaccination__table td:nth-child(4) {
+  width: 26%;
+}
+
+.vaccination__table th:nth-child(5),
+.vaccination__table td:nth-child(5) {
+  width: 8%;
 }
 
 .vaccination__info {
@@ -16,9 +43,10 @@
 
 .vaccination__table th,
 .vaccination__table td {
-  padding: 10px 12px;
+  padding: 8px 9px;
   border-bottom: 1px solid var(--card);
   text-align: left;
+  vertical-align: top;
 }
 
 .vaccination__table th {
@@ -68,8 +96,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-top: 12px;
+  gap: 0.5rem;
+  margin-top: 8px;
 }
 
 .vaccination__summary {

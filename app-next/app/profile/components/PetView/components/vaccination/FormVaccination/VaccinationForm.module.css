@@ -1,23 +1,23 @@
 .vaccination {
   background: var(--card);
-  border-radius: 12px;
-  padding: 12px 14px;
+  border-radius: 14px;
+  padding: 14px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .vaccination__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
 }
 
 .vaccination__title {
-  font-size: 20px;
+  font-size: 1.15rem;
   font-weight: 600;
   margin: 0;
 }
@@ -25,25 +25,32 @@
 .vaccination__block {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: 12px;
+  gap: 10px;
+  align-items: start;
 }
 
 .vaccination__row {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 6px;
+  gap: 5px;
+  font-size: 0.9rem;
 }
 
 .vaccination__field {
   border: 1px solid var(--card);
-  border-radius: 8px;
-  padding: 8px 10px;
+  border-radius: 10px;
+  min-height: 40px;
+  padding: 7px 10px;
 }
 
 textarea.vaccination__field {
   resize: vertical;
-  min-height: 52px;
+  min-height: 44px;
+}
+
+.vaccination__row:last-child {
+  grid-column: auto;
 }
 
 .vaccination__actions {
@@ -51,7 +58,7 @@ textarea.vaccination__field {
 }
 
 .vaccination__button {
-  padding: 10px 14px;
+  padding: 7px 12px;
   border-radius: 10px;
   border: none;
   background: var(--ink);
@@ -76,5 +83,18 @@ textarea.vaccination__field {
 
   .vaccination__block {
     grid-template-columns: 1fr;
+  }
+
+  .vaccination {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .vaccination__field {
+    min-height: 44px;
+  }
+
+  textarea.vaccination__field {
+    min-height: 52px;
   }
 }

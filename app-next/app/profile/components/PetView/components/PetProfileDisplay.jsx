@@ -19,12 +19,10 @@ export function PetProfileDisplay({ pet, onEdit, formatDate, isAdmin }) {
       if (event.key === "Escape") setIsVaccinationOpen(false);
     }
 
-    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", onKeyDown);
     setTimeout(() => closeButtonRef.current?.focus(), 0);
 
     return () => {
-      document.body.style.overflow = "";
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [isVaccinationOpen]);
