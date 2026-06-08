@@ -30,6 +30,7 @@ export default function ProfilePage() {
   const [userSearch, setUserSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [adminNotice, setAdminNotice] = useState(null);
+  const [permissionDialog, setPermissionDialog] = useState(null);
   const [newUserForm, setNewUserForm] = useState({
     full_name: "",
     email: "",
@@ -153,6 +154,14 @@ export default function ProfilePage() {
   }
 
   async function handleRoleToggle(listedUser) {
+    if (isDemoAccount && !listedUser.admin) {
+      setPermissionDialog({
+        title: "Make Admin",
+        message: "You do not have permission to grant admin access.",
+      });
+      return;
+    }
+
     setAdminNotice({ tone: "info", message: `Updating ${listedUser.full_name || listedUser.email}...` });
     setRoleUpdateId(listedUser.id);
 
@@ -219,6 +228,14 @@ export default function ProfilePage() {
   }
 
   async function handleDeleteUser(listedUser) {
+    if (isDemoAccount) {
+      setPermissionDialog({
+        title: "Delete User",
+        message: "Demo admins do not have permission to delete users.",
+      });
+      return;
+    }
+
     const petCount = Number(listedUser.pet_count || 0);
     const baseName = listedUser.full_name || listedUser.email;
     const confirmed = window.confirm(
@@ -579,6 +596,18 @@ export default function ProfilePage() {
           </div>
         ) : null}
       </div>
+
+      {permissionDialog ? (
+        <div className={styles.profile__permissionOverlay} role="presentation" onClick={() => setPermissionDialog(null)}>
+          <div className={styles.profile__permissionDialog} role="dialog" aria-modal="true" aria-labelledby="permission-title" onClick={(event) => event.stopPropagation()}>
+            <h2 id="permission-title">{permissionDialog.title}</h2>
+            <p>{permissionDialog.message}</p>
+            <button type="button" className={styles.profile__permissionButton} onClick={() => setPermissionDialog(null)}>
+              OK
+            </button>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
