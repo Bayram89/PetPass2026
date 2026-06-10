@@ -2,14 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import styles from "./Features.module.css";
-
-const operatingModel = [
-  "Create or edit a pet record to see the owner, passport, and identity details in one place.",
-  "Add, update, or delete vaccinations to test the admin-only medical workflow.",
-  "Open the all-pets and all-users views to see the dashboard side recruiters usually miss.",
-];
 
 const valueCards = [
   {
@@ -32,22 +26,6 @@ export default function Features() {
   return (
     <section className={styles.features}>
       <div className={`pageSection ${styles.features__shell}`}>
-        <article className={`pageCard ${styles.features__manifesto}`}>
-          <div className={styles.features__manifestoHeader}>
-            <span className="eyebrow">For recruiters</span>
-            <h2>Open the admin side and test the parts a regular visitor never gets to see.</h2>
-          </div>
-
-          <div className={styles.features__steps}>
-            {operatingModel.map((step) => (
-              <div key={step} className={styles.features__step}>
-                <CheckCircle2 size={18} />
-                <p>{step}</p>
-              </div>
-            ))}
-          </div>
-        </article>
-
         <div className={styles.features__grid}>
           {valueCards.map((card) => (
             <article key={card.heading} className={styles.features__card}>

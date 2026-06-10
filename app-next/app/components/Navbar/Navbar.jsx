@@ -189,7 +189,7 @@ export default function Navbar() {
               Continue with Google
             </button>
             <button type="button" className={styles.navbar__demoButton} onClick={handleDemoLogin} disabled={demoPending}>
-              {demoPending ? "Opening demo admin..." : "Explore as demo admin"}
+              {demoPending ? "Opening demo..." : "Try Demo"}
             </button>
             <div className={styles.navbar__demoCredentials}>
               <div className={styles.navbar__demoCredential}>

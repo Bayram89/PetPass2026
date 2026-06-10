@@ -2,11 +2,11 @@ import Image from "next/image";
 import styles from "./Category.module.css";
 
 const records = [
-  { name: "Vaccinations", image: "/images/vaccination.webp", text: "Track doses, dates, and next actions without digging through paper cards." },
-  { name: "Travel papers", image: "/images/travel.webp", text: "Keep export documents and passport details ready when borders or airlines ask." },
-  { name: "Medical history", image: "/images/medical.webp", text: "Build a usable timeline instead of scattered clinic screenshots and emails." },
-  { name: "Identity data", image: "/images/identification.webp", text: "Store chip numbers, profile details, and owner essentials in the same place." },
-  { name: "Care reminders", image: "/images/reminder.webp", text: "Turn admin into a rhythm with upcoming checks, renewals, and follow-ups." },
+  { name: "Vaccinations", image: "/images/vaccination.webp", text: "Track vaccination dates, booster schedules, and supporting records." },
+  { name: "Travel Documents", image: "/images/travel.webp", text: "Keep passports, health certificates, and travel paperwork organized." },
+  { name: "Medical History", image: "/images/medical.webp", text: "Access vet visits, treatments, and health records in a single timeline." },
+  { name: "Pet Identity", image: "/images/identification.webp", text: "Store microchip information and ownership details securely." },
+  { name: "Care Reminders", image: "/images/reminder.webp", text: "Get reminders for vaccinations, renewals, and routine checkups." },
 ];
 
 export default function Category() {
@@ -14,9 +14,11 @@ export default function Category() {
     <section className={styles.category}>
       <div className={`pageSection ${styles.category__shell}`}>
         <div className={styles.category__heading}>
-          <span className="eyebrow">Everything in one record set</span>
-          <h2 className={styles.category__title}>Built for the moments where missing one detail becomes a real problem.</h2>
-          <p className={styles.category__lede}>PetPass focuses on the information owners actually need when they are at the clinic, on the road, or fixing a document in a hurry.</p>
+          <span className="eyebrow">All your pet's records</span>
+          <h2 className={styles.category__title}>All your pet's records, ready when you need them</h2>
+          <p className={styles.category__lede}>
+            PetPass brings vaccination records, travel documents, microchip information, and health history together in one place, so you're not searching through emails, folders, or paperwork when time matters.
+          </p>
         </div>
 
         <div className={styles.category__grid}>

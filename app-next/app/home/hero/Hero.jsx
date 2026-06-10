@@ -11,15 +11,15 @@ import { DEMO_ADMIN_EMAIL, DEMO_ADMIN_PASSWORD, signInAsDemoAdmin } from "@/lib/
 import styles from "./Hero.module.css";
 
 const proofPoints = [
-  { label: "Medical history", value: "Vet notes, vaccines, reminders" },
-  { label: "Travel readiness", value: "Passport details and border docs" },
-  { label: "Owner clarity", value: "One place instead of five folders" },
+  { label: "Vaccinations", value: "Dates, boosters, and records in one place." },
+  { label: "Travel Documents", value: "Passports and certificates ready when needed." },
+  { label: "Pet Identity", value: "Microchip and owner information easy to access." },
 ];
 
 const trustItems = [
-  { icon: ShieldCheck, title: "Structured records", text: "Store pet identity, passports, and routine care in one calm dashboard." },
-  { icon: Stethoscope, title: "Vet-first details", text: "Keep immunization timelines and appointment context easy to find." },
-  { icon: PlaneTakeoff, title: "Border-ready", text: "Travel paperwork stays close when plans move fast." },
+  { icon: ShieldCheck, title: "Pet Records", text: "Store identification details, vaccination records, and essential documents securely." },
+  { icon: Stethoscope, title: "Health Records", text: "Access vaccination history, vet visits, and medical notes in seconds." },
+  { icon: PlaneTakeoff, title: "Travel Ready", text: "Keep passports, health certificates, and travel paperwork organized in one place." },
 ];
 
 export default function Hero() {
@@ -59,10 +59,10 @@ export default function Hero() {
       <div className={styles.hero__backdrop} />
       <div className={`pageSection ${styles.hero__shell}`}>
         <div className={styles.hero__copy}>
-          <span className="eyebrow">Pet records, rethought</span>
-          <h1 className={styles.hero__title}>A warmer, cleaner home for every document your pet depends on.</h1>
+          <span className="eyebrow">Pet records, simplified</span>
+          <h1 className={styles.hero__title}>Travel with your pet without the paperwork scramble.</h1>
           <p className={styles.hero__lede}>
-            PetPass turns vaccine dates, identity details, and travel paperwork into a single timeline that feels clear the moment you open it.
+            PetPass helps pet owners keep vaccination records, health certificates, microchip information, and travel documents organized in one secure place.
           </p>
 
           <div className={styles.hero__actions}>
@@ -73,7 +73,7 @@ export default function Hero() {
             )}
             {!loading && !isAuthed && (
               <button type="button" className="buttonSecondary" onClick={handleDemoLogin} disabled={demoPending}>
-                {demoPending ? "Opening demo admin..." : "Explore as demo admin"}
+                {demoPending ? "Opening demo..." : "Try Demo"}
               </button>
             )}
             <Link href="/about" className="buttonSecondary">
@@ -83,9 +83,9 @@ export default function Hero() {
 
           {!isAuthed && (
             <div className={styles.hero__demoCard}>
-              <span className="eyebrow">Demo admin access</span>
-              <h2>See the real admin side without contacting me first.</h2>
-              <p>Use the public demo account to try pet creation, vaccine management, editing, deleting, and the admin dashboard.</p>
+              <span className="eyebrow">Try the demo</span>
+              <h2>Take a look inside PetPass.</h2>
+              <p>Access a fully functional demo account to explore pet profiles, vaccination records, document storage, and administrative features using sample data.</p>
 
               <div className={styles.hero__demoCredentials}>
                 <div className={styles.hero__demoCredential}>
@@ -98,7 +98,7 @@ export default function Hero() {
                 </div>
               </div>
 
-              <small className={styles.hero__demoNote}>This is a public demo account using sample data only. Records may be refreshed to keep the demo clean.</small>
+              <small className={styles.hero__demoNote}>This shared demo environment is provided for evaluation purposes. Data may be refreshed periodically.</small>
               {demoError ? <p className={styles.hero__demoError}>{demoError}</p> : null}
             </div>
           )}
@@ -117,8 +117,8 @@ export default function Hero() {
           <div className={styles.hero__imageFrame}>
             <Image src="/images/hero.webp" alt="A calm pet portrait representing organized pet care" width={1800} height={1600} className={styles.hero__image} priority />
             <div className={styles.hero__stamp}>
-              <span className={styles.hero__stampLabel}>Ready to move</span>
-              <strong>Vaccinations verified</strong>
+              <span className={styles.hero__stampLabel}>Travel ready</span>
+              <strong>Vaccinations up to date</strong>
             </div>
           </div>
 
