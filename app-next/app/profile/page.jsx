@@ -183,6 +183,14 @@ export default function ProfilePage() {
   }
 
   function handleStartEditUser(listedUser) {
+    if (isDemoAccount) {
+      setPermissionDialog({
+        title: "Edit User",
+        message: "Demo admins do not have permission to edit users.",
+      });
+      return;
+    }
+
     setAdminNotice(null);
     setEditUserId(listedUser.id);
     setEditForm({
