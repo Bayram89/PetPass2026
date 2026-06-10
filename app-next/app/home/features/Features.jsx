@@ -7,9 +7,9 @@ import styles from "./Features.module.css";
 
 const valueCards = [
   {
-    heading: "Designed for messy real life",
-    text: "Most pet admin starts as screenshots, clinic papers, and memory. PetPass gives that information a cleaner shape without making the experience cold.",
-    cta: "View your profile",
+    heading: "Built for everyday pet ownership",
+    text: "From vaccination records to travel documents, keeping track of important information shouldn't be complicated. PetPass helps you store and organize everything in one place.",
+    cta: "View Your Profile",
     destination: "/profile",
   },
   {
