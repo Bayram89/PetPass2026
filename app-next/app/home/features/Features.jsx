@@ -39,9 +39,9 @@ export default function Features() {
           ))}
 
           <article className={styles.features__ctaPanel}>
-            <span className="eyebrow">Public demo</span>
-            <h3>Everything here uses demo data, so it is safe to explore.</h3>
-            <p>The demo admin account is public on purpose. It exists so recruiters can test the real admin tools without asking for access first.</p>
+            <span className="eyebrow">Public Demo</span>
+            <h3>Everything in the demo environment uses sample data and is safe to explore.</h3>
+            <p>The shared demo account lets visitors explore pet records, vaccination management, and administrative features without creating an account.</p>
             <Link href="/faq" className="buttonPrimary">
               See common questions
             </Link>
