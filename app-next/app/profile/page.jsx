@@ -113,8 +113,7 @@ export default function ProfilePage() {
       <section className={styles.profile}>
         <div className={`pageSection pageCard ${styles.profile__empty}`}>
           <span className="eyebrow">Profile</span>
-          <h1>Sign in first to open your pet dashboard.</h1>
-          <p>Your records, reminders, and pet cards appear here once you authenticate.</p>
+          <h1>Sign in to view your pet records, vaccination history, and upcoming reminders.</h1>
         </div>
       </section>
     );
