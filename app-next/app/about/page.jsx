@@ -2,9 +2,9 @@ import Image from "next/image";
 import styles from "./page.module.css";
 
 const principles = [
-  { index: "01", text: "Reduce panic when owners need proof quickly." },
-  { index: "02", text: "Make health and travel details feel structured, not technical." },
-  { index: "03", text: "Give the product a warmer tone than typical admin tools." },
+  { index: "01", text: "Keep vaccination records and health information organized." },
+  { index: "02", text: "Store travel documents and certificates in one place." },
+  { index: "03", text: "Access important pet information quickly when it's needed." },
 ];
 
 export default function AboutPage() {
@@ -12,17 +12,16 @@ export default function AboutPage() {
     <section className={styles.about}>
       <div className={`pageSection ${styles.about__shell}`}>
         <div className={styles.about__intro}>
-          <span className="eyebrow">Why PetPass exists</span>
-          <h1>Pet admin is usually simple until one missing detail suddenly matters.</h1>
+          <span className="eyebrow">Why PetPass Exists</span>
+          <h1>Pet records often end up spread across emails, paperwork, clinic portals, and phone screenshots.</h1>
           <p>
-            PetPass is built around that exact moment. The product aims to keep vaccination records, travel documents, and owner details clear enough that you can act instead of searching.
+            Finding the right information isn't usually a problem until someone asks for it. PetPass was created to make important records easier to organize, access, and maintain.
           </p>
         </div>
 
         <div className={styles.about__grid}>
           <article className={`pageCard ${styles.about__story}`}>
-            <h2>The direction</h2>
-            <p>We wanted the app to feel less like a spreadsheet and more like a trusted folder that has already been put in order for you.</p>
+            <h2>What PetPass Helps With</h2>
             <div className={styles.about__principles}>
               {principles.map((item) => (
                 <div key={item.index} className={styles.about__principle}>
@@ -38,8 +37,8 @@ export default function AboutPage() {
               <Image src="/images/about.webp" alt="A pet owner holding a puppy" width={1000} height={1200} className={styles.about__image} />
             </div>
             <div className={styles.about__note}>
-              <strong>One app, fewer blind spots.</strong>
-              <p>Records are most useful when they can be read fast under pressure.</p>
+              <strong>One place for the records that matter.</strong>
+              <p>Quickly find vaccination records, travel documents, and pet information whenever they're needed.</p>
             </div>
           </div>
         </div>

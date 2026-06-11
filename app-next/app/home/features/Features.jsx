@@ -13,9 +13,9 @@ const valueCards = [
     destination: "/profile",
   },
   {
-    heading: "Strong enough for travel moments",
-    text: "When a requirement changes, the useful thing is seeing what is missing immediately. The product should help you notice gaps, not hide them.",
-    cta: "Read the story",
+    heading: "Ready when important records are needed",
+    text: "Whether you're visiting a vet, preparing for travel, or updating your pet's information, having the right records available can save time and frustration. PetPass keeps vaccination history, travel documents, microchip information, and ownership records organized in one place.",
+    cta: "Learn More",
     destination: "/about",
   },
 ];
