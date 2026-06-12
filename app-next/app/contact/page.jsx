@@ -18,9 +18,9 @@ export default function ContactPage() {
     <section className={styles.contact}>
       <div className={`pageSection ${styles.contact__shell}`}>
         <div className={styles.contact__intro}>
-          <span className="eyebrow">Contact the team</span>
-          <h1>If you are stuck on records, onboarding, or the product direction, start here.</h1>
-          <p>PetPass is still growing, so the contact area works best as a direct line for product questions, feedback, and support requests.</p>
+          <span className="eyebrow">Contact the Team</span>
+          <h1>Have a question, need support, or want to share feedback? We'd love to hear from you.</h1>
+          <p>Whether you're managing pet records, updating travel documents, or getting started with PetPass, use the form below to get in touch.</p>
 
           <div className={styles.contact__social}>
             {socialLinks.map((social) => (
@@ -33,9 +33,9 @@ export default function ContactPage() {
 
         <div className={styles.contact__grid}>
           <div className={`pageCard ${styles.contact__note}`}>
-            <p className={styles.contact__noteLabel}>Demo support lane</p>
-            <h2>Expect clear answers, not canned replies.</h2>
-            <p>Use this form to explain what is missing, confusing, or blocking you. The goal is to make the next version sharper.</p>
+            <p className={styles.contact__noteLabel}>Support & Feedback</p>
+            <h2>Tell us about your question, issue, or suggestion.</h2>
+            <p>We'll review your message and get back to you as soon as possible.</p>
             <div className={styles.contact__petArt}>
               <Image src={pets} alt="Illustrated pets" className={styles.contact__pets} />
             </div>
@@ -53,8 +53,8 @@ export default function ContactPage() {
             </label>
 
             <label className={styles.contact__field}>
-              <span>What do you need help with?</span>
-              <textarea name="message" rows={7} placeholder="Describe the issue, idea, or feature request." required />
+              <span>How can we help?</span>
+              <textarea name="message" rows={7} placeholder="Tell us about your question, issue, or feedback." required />
             </label>
 
             <button type="submit" className="buttonPrimary">
