@@ -50,8 +50,8 @@ export default function AddVaccination({ petId }) {
   const handleEdit = (v) => {
     if (isDemoAdmin) {
       setPermissionNotice({
-        title: "Edit Vaccination",
-        message: "Demo admins do not have permission to edit vaccinations.",
+        title: "Edit Pet Record",
+        message: "Demo admins do not have permission to edit any pet record.",
       });
       return;
     }
@@ -64,8 +64,8 @@ export default function AddVaccination({ petId }) {
     if (!isAdmin) return;
     if (isDemoAdmin) {
       setPermissionNotice({
-        title: "Delete Vaccination",
-        message: "Demo admins do not have permission to delete vaccinations.",
+        title: "Delete Pet Record",
+        message: "Demo admins do not have permission to delete any pet record.",
       });
       return;
     }
@@ -88,13 +88,6 @@ export default function AddVaccination({ petId }) {
 
       {!loading && !err && (
         <>
-          {permissionNotice && (
-            <div className={styles.vaccination__error} role="alert">
-              <strong>{permissionNotice.title}</strong>
-              <br />
-              {permissionNotice.message}
-            </div>
-          )}
           {isAdmin && !isDemoAdmin && <FormVaccination petId={petId}  onCreated={load} />}
           <ListVaccination items={items} canEdit={isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
 
@@ -112,6 +105,18 @@ export default function AddVaccination({ petId }) {
           )}
         </>
       )}
+
+      {permissionNotice ? (
+        <div className={styles.vaccination__permissionOverlay} role="presentation" onClick={() => setPermissionNotice(null)}>
+          <div className={styles.vaccination__permissionDialog} role="dialog" aria-modal="true" aria-labelledby="vaccination-permission-title" onClick={(event) => event.stopPropagation()}>
+            <h2 id="vaccination-permission-title">{permissionNotice.title}</h2>
+            <p>{permissionNotice.message}</p>
+            <button type="button" className={styles.vaccination__permissionButton} onClick={() => setPermissionNotice(null)}>
+              OK
+            </button>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
