@@ -3,6 +3,11 @@ import * as db from "../database/vaccinations.js";
 import { requireAuth,requireRole } from '../middlewares/auth.js';
 const router = express.Router();
 
+function isDemoAdmin(req) {
+  const user = req.user || req.session?.user;
+  return user?.role === "admin" && (user?.email === "demo@petpass.com" || user?.address === "Sample demo data only");
+}
+
 // GET
 
 router.get("/pets/:petId/vaccinations",requireAuth, async (req, res) => {
@@ -21,6 +26,10 @@ router.get("/pets/:petId/vaccinations",requireAuth, async (req, res) => {
 // POST
 router.post("/pets/:petId/vaccinations",requireAuth, requireRole('admin'), async (req, res) => {
   try {
+    if (isDemoAdmin(req)) {
+      return res.status(403).json({ error: "Demo admins do not have permission to add vaccinations." });
+    }
+
     const { petId } = req.params;
     const { vaccine_name, date_administered, next_due, veterinarian, notes } = req.body;
 
@@ -57,6 +66,10 @@ router.post("/pets/:petId/vaccinations",requireAuth, requireRole('admin'), async
 // Update
 router.patch("/vaccinations/:id",requireAuth, requireRole('admin'), async (req, res) => {
   try {
+    if (isDemoAdmin(req)) {
+      return res.status(403).json({ error: "Demo admins do not have permission to edit vaccinations." });
+    }
+
     const { id } = req.params;
 
     const allowed = ["vaccine_name", "date_administered", "next_due", "veterinarian", "notes"];
@@ -80,6 +93,10 @@ router.patch("/vaccinations/:id",requireAuth, requireRole('admin'), async (req, 
 // DELETE
 router.delete("/vaccinations/:id",requireAuth, requireRole('admin'), async (req, res) => {
   try {
+    if (isDemoAdmin(req)) {
+      return res.status(403).json({ error: "Demo admins do not have permission to delete vaccinations." });
+    }
+
     const { id } = req.params;
     const exists = await db.getVaccinationById(id);
     if (!exists) return res.status(404).json({ error: "Vaccination not found" });

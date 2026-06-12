@@ -13,10 +13,12 @@ import api from "@/lib/api"; // or "@/app/lib/api" if that's where your file is
 export default function AddVaccination({ petId }) {
   const { user } = useAuth();
   const isAdmin = !!user && user.role === "admin";
+  const isDemoAdmin = isAdmin && (user?.email === "demo@petpass.com" || user?.address === "Sample demo data only");
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const [permissionNotice, setPermissionNotice] = useState(null);
 
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -46,12 +48,28 @@ export default function AddVaccination({ petId }) {
   }, [load]);
 
   const handleEdit = (v) => {
+    if (isDemoAdmin) {
+      setPermissionNotice({
+        title: "Edit Vaccination",
+        message: "Demo admins do not have permission to edit vaccinations.",
+      });
+      return;
+    }
+
     setEditing(v);
     setEditOpen(true);
   };
 
   const handleDelete = async (id) => {
     if (!isAdmin) return;
+    if (isDemoAdmin) {
+      setPermissionNotice({
+        title: "Delete Vaccination",
+        message: "Demo admins do not have permission to delete vaccinations.",
+      });
+      return;
+    }
+
     const ok = window.confirm("Delete this vaccination?");
     if (!ok) return;
 
@@ -70,7 +88,14 @@ export default function AddVaccination({ petId }) {
 
       {!loading && !err && (
         <>
-          {isAdmin && <FormVaccination petId={petId}  onCreated={load} />}
+          {permissionNotice && (
+            <div className={styles.vaccination__error} role="alert">
+              <strong>{permissionNotice.title}</strong>
+              <br />
+              {permissionNotice.message}
+            </div>
+          )}
+          {isAdmin && !isDemoAdmin && <FormVaccination petId={petId}  onCreated={load} />}
           <ListVaccination items={items} canEdit={isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
 
           {editOpen && editing && (

@@ -5,10 +5,13 @@ import { Pencil, Syringe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AddVaccination from "./vaccination/AddVaccination/AddVaccination";
 import ProfileVaccination from "./vaccination/ProfileVaccination/ProfileVaccination";
+import { useAuth } from "@/app/providers";
 import { getPetPhotoUrl } from "@/lib/pet-images";
 import styles from "./PetProfile.module.css";
 
 export function PetProfileDisplay({ pet, onEdit, formatDate, isAdmin }) {
+  const { user } = useAuth();
+  const isDemoAdmin = isAdmin && (user?.email === "demo@petpass.com" || user?.address === "Sample demo data only");
   const [isVaccinationOpen, setIsVaccinationOpen] = useState(false);
   const closeButtonRef = useRef(null);
 
@@ -142,7 +145,7 @@ export function PetProfileDisplay({ pet, onEdit, formatDate, isAdmin }) {
           <div className={styles.modal__content}>
             <header className={styles.modal__header}>
               <h3 id="vaccinationModalTitle" className={styles.modal__title}>
-                Add or edit vaccinations
+                {isDemoAdmin ? "Vaccination history" : "Add or edit vaccinations"}
               </h3>
               <button ref={closeButtonRef} className={styles.modal__close} aria-label="Close dialog" onClick={() => setIsVaccinationOpen(false)}>
                 ×
