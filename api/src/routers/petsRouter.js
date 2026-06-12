@@ -6,6 +6,11 @@ import crypto from "crypto";
 import { requireAuth } from '../middlewares/auth.js';
 const petsRouter = express.Router();
 
+function isDemoAdmin(request) {
+  const user = request.user || request.session?.user;
+  return user?.role === "admin" && (user?.email === "demo@petpass.com" || user?.address === "Sample demo data only");
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, path.join(process.cwd(), "uploads", "pets")),
   filename: (req, file, cb) => {
@@ -94,6 +99,10 @@ petsRouter.get("/api/pets",requireAuth, async (request, response) => {
 
 petsRouter.put("/api/pet/:id",requireAuth, async (request, response, next) => {
   try {
+    if (isDemoAdmin(request)) {
+      return response.status(403).send({ error: "Demo admins do not have permission to edit any pet record." });
+    }
+
     const id = Number(request.params.id);
     const pet = request.body;
 

@@ -18,6 +18,47 @@
   color: var(--text-soft);
 }
 
+.pet__permissionOverlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(20, 32, 29, 0.42);
+  z-index: 50;
+}
+
+.pet__permissionDialog {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: #fff9f4;
+  box-shadow: var(--shadow-lg);
+}
+
+.pet__permissionDialog h2 {
+  font-size: 1.45rem;
+}
+
+.pet__permissionDialog p {
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.pet__permissionButton {
+  justify-self: end;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--text);
+  color: #fff;
+  font-weight: 800;
+}
+
 @media (max-width: 900px) {
   .pet__card {
     padding: 22px 18px;

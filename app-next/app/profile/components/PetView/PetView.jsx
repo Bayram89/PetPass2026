@@ -14,6 +14,7 @@ export default function FetchPetData() {
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(null);
+  const [permissionDialog, setPermissionDialog] = useState(null);
   const { user, loading } = useAuth();
   const id = useParams().pet;
 
@@ -39,9 +40,18 @@ export default function FetchPetData() {
   }, [fetchPet]);
 
   const isAdmin = user?.role === "admin";
+  const isDemoAdmin = isAdmin && (user?.email === "demo@petpass.com" || user?.address === "Sample demo data only");
   const isOwner = Boolean(user?.id && pet?.owner_user_id && String(pet.owner_user_id) === String(user.id));
 
   async function handleSaveProfile() {
+    if (isDemoAdmin) {
+      setPermissionDialog({
+        title: "Edit Pet Record",
+        message: "Demo admins do not have permission to edit any pet record.",
+      });
+      return;
+    }
+
     try {
       const updated = await api(`/api/pet/${id}`, {
         method: "PUT",
@@ -61,12 +71,22 @@ export default function FetchPetData() {
   function handleEditProfile() {
     const today = new Date().toISOString().slice(0, 10);
     setDraft({ ...pet, updated_at: today });
+    setPermissionDialog(null);
     setIsEditing(true);
   }
 
   function handleCancel() {
     setDraft(null);
+    setPermissionDialog(null);
     setIsEditing(false);
+  }
+
+  function handleClosePermissionDialog() {
+    setPermissionDialog(null);
+    if (isDemoAdmin && pet) {
+      const today = new Date().toISOString().slice(0, 10);
+      setDraft({ ...pet, updated_at: today });
+    }
   }
 
   if (loading) {
@@ -120,6 +140,18 @@ export default function FetchPetData() {
           )}
         </div>
       </div>
+
+      {permissionDialog ? (
+        <div className={styles.pet__permissionOverlay} role="presentation" onClick={handleClosePermissionDialog}>
+          <div className={styles.pet__permissionDialog} role="dialog" aria-modal="true" aria-labelledby="pet-permission-title" onClick={(event) => event.stopPropagation()}>
+            <h2 id="pet-permission-title">{permissionDialog.title}</h2>
+            <p>{permissionDialog.message}</p>
+            <button type="button" className={styles.pet__permissionButton} onClick={handleClosePermissionDialog}>
+              OK
+            </button>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
