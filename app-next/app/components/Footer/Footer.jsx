@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, ShieldCheck, PlaneTakeoff } from "lucide-react";
+import { Mail, PlaneTakeoff, ShieldCheck } from "lucide-react";
 import styles from "./Footer.module.css";
 
 const quickLinks = [
@@ -15,9 +15,9 @@ const policyLinks = [
 ];
 
 const highlights = [
-  { icon: ShieldCheck, title: "Structured records", text: "Keep identity and health details readable at a glance." },
-  { icon: PlaneTakeoff, title: "Travel focused", text: "Useful when a trip suddenly becomes a paperwork problem." },
-  { icon: Mail, title: "Human support", text: "Reach the team through the contact page as the product grows." },
+  { icon: ShieldCheck, title: "Organized Records", text: "Store health records, identification details, and essential documents." },
+  { icon: PlaneTakeoff, title: "Travel Ready", text: "Keep passports, certificates, and travel paperwork accessible when needed." },
+  { icon: Mail, title: "Support", text: "Questions or feedback? Contact the PetPass team." },
 ];
 
 export default function Footer() {
@@ -27,8 +27,8 @@ export default function Footer() {
         <div className={styles.footer__top}>
           <div className={styles.footer__brand}>
             <span className="eyebrow">PetPass</span>
-            <h2>Pet records, kept clear.</h2>
-            <p>Organize the details that matter when vet visits, identity checks, or travel plans stop being theoretical.</p>
+            <h2>Pet records, kept organized.</h2>
+            <p>Keep vaccination records, travel documents, microchip information, and important pet details in one secure place.</p>
           </div>
 
           <div className={styles.footer__highlightGrid}>
@@ -69,8 +69,8 @@ export default function Footer() {
 
           <div className={styles.footer__meta}>
             <p className={styles.footer__label}>PetPass</p>
-            <p>Clearer records for owners, clinics, and travel moments.</p>
-            <p className={styles.footer__copyright}>© {new Date().getFullYear()} PetPass</p>
+            <p>Helping pet owners keep important records organized.</p>
+            <p className={styles.footer__copyright}>&copy; {new Date().getFullYear()} PetPass</p>
           </div>
         </div>
       </div>
