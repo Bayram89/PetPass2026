@@ -142,9 +142,8 @@ export default function PetsAllView() {
       <div className={`pageSection ${styles.pets__shell}`}>
         <div className={styles.pets__header}>
           <div>
-            <span className="eyebrow">Admin view</span>
-            <h1>Full pets dashboard</h1>
-            <p>Search, sort, and open any pet record from a cleaner table surface.</p>
+            <span className="eyebrow">Admin Dashboard</span>
+            <h1>Access pet records, vaccination history, and owner information from a single view.</h1>
           </div>
 
           <div className={styles.pets__tools}>
