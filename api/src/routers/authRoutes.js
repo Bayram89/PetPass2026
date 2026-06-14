@@ -174,7 +174,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2026-06-02",
         issuing_authority: null,
         current_status: "Active",
-        photo_url: null,
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/A_cute_golden_cat.jpg",
       },
       {
         owner_user_id: ownerMap.get("giulia.romano@petpass-demo.local"),
@@ -191,7 +191,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-03-26",
         issuing_authority: "North Shore Vets",
         current_status: "Active",
-        photo_url: "/images/record.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Keeshond_dog_%288109958931%29.jpg",
       },
       {
         owner_user_id: ownerMap.get("javier.navarro@petpass-demo.local"),
@@ -208,7 +208,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-04-22",
         issuing_authority: "Old Town Vet House",
         current_status: "Rabies expired",
-        photo_url: "/images/medical.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Lagotto_romagnolo_322.jpg",
       },
       {
         owner_user_id: ownerMap.get("aiko.tanaka@petpass-demo.local"),
@@ -225,7 +225,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-03-22",
         issuing_authority: "City Aviary Care",
         current_status: "Booster due soon",
-        photo_url: "/images/vaccination.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Domestic_ferret.jpg",
       },
       {
         owner_user_id: ownerMap.get("aiko.tanaka@petpass-demo.local"),
@@ -242,7 +242,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-02-18",
         issuing_authority: "City Aviary Care",
         current_status: "Travel certificate on file",
-        photo_url: "/images/travel.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/White-bellied_caique.jpg",
       },
       {
         owner_user_id: ownerMap.get("siobhan.osullivan@petpass-demo.local"),
@@ -259,7 +259,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-08-14",
         issuing_authority: "Garden Pet Practice",
         current_status: "Inspection completed",
-        photo_url: "/images/petcare.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Splash_Silkie_Chicken.jpg",
       },
       {
         owner_user_id: ownerMap.get("freja.mikkelsen@petpass-demo.local"),
@@ -276,7 +276,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-05-07",
         issuing_authority: "Garden Pet Practice",
         current_status: "Active",
-        photo_url: "https://www.rabbitsanctuary.com.au/Rabbits-Grass-Hay-Diet.jpg",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Mini_rex_bunny.jpg",
       },
       {
         owner_user_id: ownerMap.get("freja.mikkelsen@petpass-demo.local"),
@@ -293,7 +293,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-02-17",
         issuing_authority: "Harbor Cat Clinic",
         current_status: "Active",
-        photo_url: "/images/record.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Female_Burmilla_cat.jpg",
       },
       {
         owner_user_id: ownerMap.get("giulia.romano@petpass-demo.local"),
@@ -310,7 +310,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-05-02",
         issuing_authority: "North Shore Vets",
         current_status: "Active",
-        photo_url: "/images/identification.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Belgian_Laekenois_600.jpg",
       },
       {
         owner_user_id: ownerMap.get("ingrid.solheim@petpass-demo.local"),
@@ -327,7 +327,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-03-09",
         issuing_authority: "Nordic Fjord Vet",
         current_status: "Active",
-        photo_url: "/images/nora.png",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Nova_scotia_duck_tolling_retriever_200.jpg",
       },
       {
         owner_user_id: ownerMap.get("aiko.tanaka@petpass-demo.local"),
@@ -344,7 +344,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-06-01",
         issuing_authority: "Yokohama Pet Clinic",
         current_status: "Active",
-        photo_url: "/images/record.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Kururu-LaPermCat_in_Cat_Cafe.jpg",
       },
       {
         owner_user_id: ownerMap.get("aino.korhonen@petpass-demo.local"),
@@ -361,7 +361,7 @@ async function ensureDemoDataset(demoAdminUser) {
         issue_date: "2025-04-10",
         issuing_authority: "Turku Animal Health",
         current_status: "Active",
-        photo_url: "/images/identification.webp",
+        photo_url: "https://commons.wikimedia.org/wiki/Special:FilePath/Spanish_Water_Dog_in_Tallinn_3.JPG",
       },
     ];
 
