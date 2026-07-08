@@ -38,17 +38,66 @@
 .profile__identity {
   display: flex;
   gap: 20px;
-  align-items: center;
+  align-items: flex-start;
   min-width: 0;
+}
+
+.profile__avatarBlock {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.profile__avatarBlockDemo {
+  gap: 10px;
+}
+
+.profile__avatarDemoFrame {
+  width: 148px;
+  border-radius: 30px;
+  overflow: hidden;
 }
 
 .profile__avatar {
   width: 132px;
-  height: 132px;
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 32px;
   object-fit: cover;
   border: 1px solid var(--line);
   box-shadow: var(--shadow-md);
+}
+
+.profile__avatarDemo {
+  width: 148px;
+  border: 0;
+  border-radius: 30px;
+  box-shadow: none;
+  transform: scale(1.17);
+  transform-origin: center;
+}
+
+.profile__avatarCaption {
+  display: grid;
+  gap: 4px;
+  padding: 0 4px 2px;
+  text-align: center;
+}
+
+.profile__avatarCaption span {
+  color: #b8872d;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.profile__avatarCaption strong {
+  font-family: var(--font-display), serif;
+  color: var(--text);
+  font-size: 1.42rem;
+  line-height: 1.08;
 }
 
 .profile__identityCopy {

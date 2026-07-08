@@ -40,12 +40,12 @@ export default function ProfilePage() {
     passport_number: "",
   });
 
-  const userPicture = authUser?.photo ?? "/images/loading.svg";
   const count = safePets.length + 1;
   const [index, setIndex] = useState(0);
   const carouselRef = useRef(null);
   const isAuthed = Boolean(authUser);
   const isDemoAccount = user?.address === "Sample demo data only";
+  const userPicture = isDemoAccount ? "/images/demo-admin-profile-card.png" : authUser?.photo ?? "/images/loading.svg";
 
   function goTo(nextIndex) {
     const safeIndex = (nextIndex + count) % count;
@@ -350,7 +350,24 @@ export default function ProfilePage() {
         <div className={`pageCard ${styles.profile__hero}`}>
           <div className={styles.profile__heroTop}>
             <div className={styles.profile__identity}>
-              <Image src={userPicture} alt="Profile" width={220} height={220} className={styles.profile__avatar} priority />
+              <div className={`${styles.profile__avatarBlock} ${isDemoAccount ? styles.profile__avatarBlockDemo : ""}`}>
+                <div className={isDemoAccount ? styles.profile__avatarDemoFrame : ""}>
+                  <Image
+                    src={userPicture}
+                    alt={isDemoAccount ? "PetPass demo admin card" : "Profile"}
+                    width={220}
+                    height={220}
+                    className={`${styles.profile__avatar} ${isDemoAccount ? styles.profile__avatarDemo : ""}`}
+                    priority
+                  />
+                </div>
+                {isDemoAccount ? (
+                  <div className={styles.profile__avatarCaption}>
+                    <span>Owner Dashboard</span>
+                    <strong>PetPass Demo Admin</strong>
+                  </div>
+                ) : null}
+              </div>
               <div className={styles.profile__identityCopy}>
                 <span className="eyebrow">Owner dashboard</span>
                 <h1 className={styles.profile__name}>{user?.full_name}</h1>
