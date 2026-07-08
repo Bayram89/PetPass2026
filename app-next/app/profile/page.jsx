@@ -364,7 +364,6 @@ export default function ProfilePage() {
                 {isDemoAccount ? (
                   <div className={styles.profile__avatarCaption}>
                     <span>Owner Dashboard</span>
-                    <strong>PetPass Demo Admin</strong>
                   </div>
                 ) : null}
               </div>
