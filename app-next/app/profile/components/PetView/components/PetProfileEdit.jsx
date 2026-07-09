@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Check, X } from "lucide-react";
 import { useAuth } from "@/app/providers";
 import { getPetPhotoUrl } from "@/lib/pet-images";
@@ -10,9 +10,11 @@ import styles from "./PetProfile.module.css";
 
 export function PetProfileEdit({ draft, setDraft, onSave, onCancel }) {
   const { user: session } = useAuth();
+  const [photoUrlError, setPhotoUrlError] = useState("");
   const today = new Date().toISOString().slice(0, 10);
   const isAuthed = Boolean(session);
   const isAdmin = isAuthed && session?.role === "admin";
+  const isDemoAdmin = isAdmin && (session?.email === "demo@petpass.com" || session?.address === "Sample demo data only");
 
   const species = useMemo(
     () => ["Dog", "Cat", "Rabbit", "Guinea Pig", "Hamster", "Ferret", "Bird", "Fish", "Turtle", "Tortoise", "Snake", "Lizard", "Frog", "Horse", "Donkey", "Goat", "Pig", "Chicken", "Duck", "Other"],
@@ -41,13 +43,24 @@ export function PetProfileEdit({ draft, setDraft, onSave, onCancel }) {
   const photoUrl = getPetPhotoUrl(draft);
   const imageSrc = isValidUrl(photoUrl) ? photoUrl : "/images/loading.svg";
 
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const trimmedPhotoUrl = String(draft?.photo_url ?? "").trim();
+    if (!isDemoAdmin && trimmedPhotoUrl && !isValidUrl(trimmedPhotoUrl)) {
+      setPhotoUrlError("Please enter a valid image URL.");
+      return;
+    }
+
+    setPhotoUrlError("");
+    onSave();
+  }
+
   return (
     <form
       className={styles.pet}
-      onSubmit={(event) => {
-        event.preventDefault();
-        onSave();
-      }}
+      noValidate
+      onSubmit={handleSubmit}
     >
       <header className={styles.pet__hero}>
         <div className={styles.pet__heroIdentity}>
@@ -68,7 +81,18 @@ export function PetProfileEdit({ draft, setDraft, onSave, onCancel }) {
                 </option>
               ))}
             </select>
-            <input className={styles.pet__heroInput} type="url" value={draft?.photo_url ?? ""} onChange={(event) => setDraft({ ...draft, photo_url: event.target.value })} placeholder="https://pet.photo.url" />
+            <input
+              className={styles.pet__heroInput}
+              type="text"
+              inputMode="url"
+              value={draft?.photo_url ?? ""}
+              onChange={(event) => {
+                setDraft({ ...draft, photo_url: event.target.value });
+                if (photoUrlError) setPhotoUrlError("");
+              }}
+              placeholder="https://pet.photo.url"
+            />
+            {photoUrlError ? <p className={styles.pet__fieldError}>{photoUrlError}</p> : null}
           </div>
         </div>
 

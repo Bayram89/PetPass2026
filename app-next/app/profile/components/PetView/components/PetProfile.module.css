@@ -93,6 +93,13 @@
   background: rgba(255, 255, 255, 0.82);
 }
 
+.pet__fieldError {
+  margin: -2px 0 0;
+  color: #b42318;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
 .pet__main {
   display: grid;
   gap: 18px;
