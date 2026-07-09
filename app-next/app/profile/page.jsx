@@ -181,6 +181,23 @@ export default function ProfilePage() {
     }
   }
 
+  function formatPhoneNumber(value) {
+    const digits = String(value || "").replace(/\D/g, "");
+    if (!digits) return "Missing";
+
+    if (digits.length === 10 && digits.startsWith("45")) {
+      return `+${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6, 8)} ${digits.slice(8, 10)}`;
+    }
+
+    if (digits.length > 2) {
+      const countryCode = digits.slice(0, 2);
+      const rest = digits.slice(2).match(/.{1,2}/g)?.join(" ") || "";
+      return `+${countryCode}${rest ? ` ${rest}` : ""}`;
+    }
+
+    return `+${digits}`;
+  }
+
   function handleStartEditUser(listedUser) {
     if (isDemoAccount) {
       setPermissionDialog({
@@ -316,9 +333,7 @@ export default function ProfilePage() {
     }
   }
 
-  const profileContact = user?.phone
-    ? (String(user.phone).trim().startsWith("+") ? String(user.phone).trim() : `+${String(user.phone).trim()}`)
-    : "Missing";
+  const profileContact = formatPhoneNumber(user?.phone);
 
   const profileStats = [
     { label: "Pets on file", value: safePets.length },
